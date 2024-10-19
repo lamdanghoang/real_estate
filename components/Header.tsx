@@ -15,11 +15,11 @@ const navLinks = [
 ]
 
 export default function Header() {
-    return <header className="px-16 py-5 flex items-center gap-24">
+    return <header className="px-16 py-4 flex items-center gap-24 border border-b-[#B28326]">
         <Image src={logo} alt="logo" width={90} height={90} className="" />
         <div className="w-full flex justify-between items-center">
             <nav className="flex gap-2">
-                {navLinks.map((item, index) => <Link key={index} href={item.link} className="px-4 leading-10 hover:bg-[#ECDC9B]">{item.text.toUpperCase()}</Link>)}
+                {navLinks.map((item, index) => <Link key={index} href={item.link} className="px-4 py-1 leading-10 hover:bg-btnHover">{item.text.toUpperCase()}</Link>)}
             </nav>
             <CircleUserRound className="text-gray-50 bg-[#414143] rounded-full" strokeWidth={0.75} width={40} height={40} />
         </div>
