@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import { GlobalContextProvider } from "@/context/store";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,12 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body suppressHydrationWarning={true}
+      <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen justify-between`}
       >
-        <Header />
-        <main className="bg-bodyBg flex flex-col flex-grow">{children}</main>
-        <Footer />
+        <GlobalContextProvider>
+          <Header />
+          <main className="bg-bodyBg flex flex-col flex-grow">{children}</main>
+          <Footer />
+        </GlobalContextProvider>
       </body>
     </html>
   );
