@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import DataTable from "@/components/Table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { tab_list } from "@/constants/constants";
+import RealEstateTable from "@/components/RealEstate/RealEstateTable";
 
 export default function Manage() {
   const [activeTab, setActiveTab] = useState("batdongsan");
@@ -31,6 +31,7 @@ export default function Manage() {
                 text-left
                 px-4
                 py-2
+                hover:bg-[#DCAE43]/50
               "
             >
               {tab.name}
@@ -40,7 +41,7 @@ export default function Manage() {
 
         <div className="w-full lg:w-4/5">
           <TabsContent value="batdongsan">
-            <DataTable />
+            <RealEstateTable />
           </TabsContent>
           <TabsContent value="khachthue">
             <div className="p-4 bg-white rounded-lg shadow">
