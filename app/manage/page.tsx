@@ -1,13 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { tab_list } from "@/constants/constants";
 import RealEstateTable from "@/components/RealEstate/RealEstateTable";
+import GlobalContext from "@/context/store";
+import ManagerTable from "@/components/Manager/ManagerTable";
+import CustomerTable from "@/components/Customer/CustomerTable";
+import ContractTable from "@/components/Contract/ContractTable";
+import InvoiceTable from "@/components/Invoice/InvoiceTable";
 
 export default function Manage() {
+  const { isConnected } = useContext(GlobalContext);
   const [activeTab, setActiveTab] = useState("batdongsan");
 
-  return (
+  return isConnected ? (
     <div className="container mx-auto px-6 py-5">
       <Tabs
         value={activeTab}
@@ -44,19 +50,13 @@ export default function Manage() {
             <RealEstateTable />
           </TabsContent>
           <TabsContent value="khachthue">
-            <div className="p-4 bg-white rounded-lg shadow">
-              Khách Thuê Content
-            </div>
+            <CustomerTable />
           </TabsContent>
           <TabsContent value="hopdong">
-            <div className="p-4 bg-white rounded-lg shadow">
-              Hợp Đồng Content
-            </div>
+            <ContractTable />
           </TabsContent>
           <TabsContent value="hoadon">
-            <div className="p-4 bg-white rounded-lg shadow">
-              Hóa Đơn Content
-            </div>
+            <InvoiceTable />
           </TabsContent>
           <TabsContent value="baocao">
             <div className="p-4 bg-white rounded-lg shadow">
@@ -64,12 +64,12 @@ export default function Manage() {
             </div>
           </TabsContent>
           <TabsContent value="nguoiquanly">
-            <div className="p-4 bg-white rounded-lg shadow">
-              Người Quản Lý Content
-            </div>
+            <ManagerTable />
           </TabsContent>
         </div>
       </Tabs>
     </div>
+  ) : (
+    <h1 className="my-auto text-center font-bold">Bạn phải đăng nhập trước.</h1>
   );
 }

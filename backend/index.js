@@ -1,7 +1,9 @@
 const express = require("express");
+const cors = require("cors");
 const mysql = require("mysql2/promise");
 
 const app = express();
+app.use(cors());
 
 // Create a connection pool
 const pool = mysql.createPool({
@@ -34,8 +36,15 @@ app.get("/nguoiquanly/danhsach", async (req, res) => {
   await handleQuery(res, "SELECT * FROM NguoiQuanLy");
 });
 
+app.get("/dagiac/danhsach", async (req, res) => {
+  await handleQuery(res, "SELECT * FROM DaGiac");
+});
+
 app.get("/batdongsan/danhsach", async (req, res) => {
-  await handleQuery(res, "SELECT * FROM BatDongSan");
+  await handleQuery(
+    res,
+    "SELECT BatDongSan.*, NguoiQuanLy.HoTen, DonViHanhChinh.TenDVHC FROM BatDongSan INNER JOIN NguoiQuanLy ON BatDongSan.MaNQL = NguoiQuanLy.MaNQL INNER JOIN DonViHanhChinh ON BatDongSan.MaDVHC = DonViHanhChinh.MaDVHC"
+  );
 });
 
 app.get("/khachthue/danhsach", async (req, res) => {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,35 +17,42 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { District, RealEstate, StaffManager } from "@/constants/types";
 
 interface UpdatePropertyDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  propertyData?: any; // Replace with proper type
+  propertyData?: RealEstate;
+  districts: District[];
+  staffs: StaffManager[];
 }
 
 export function UpdatePropertyDialog({
   open,
   onOpenChange,
   propertyData,
+  districts,
+  staffs,
 }: UpdatePropertyDialogProps) {
-  const [formData, setFormData] = useState({
-    propertyType: "house",
-    address:
-      "123 Đường Phạm Phú Thứ, Phường Hiệp Tân, Quận Tân Phú, TP. Hồ Chí Minh",
-    area: "70 m2",
-    price: "15.000.000",
-    status: "Đang cho thuê",
-    code: "BDS0001",
-    location: "Khu phố 2 (Đây chính là thông tin địa chỉ giá BĐS chi tiết)",
-    size: "10.775m²",
-    district: "Quận Tân Phú",
-    sector: "Ngành Văn A",
+  const [formData, setFormData] = useState<RealEstate>({
+    LoaiBDS: "",
+    DiaChi: "",
+    DienTich: 0,
+    GiaThueTheoThang: 0,
+    TrangThai: "",
+    MoTa: "",
+    MaNQL: "",
+    MaDiem: "",
+    MaDVHC: "",
+    HoTen: "",
+    TenDVHC: "",
   });
 
   useEffect(() => {
     if (propertyData) {
-      setFormData(propertyData);
+      setFormData((prev) => {
+        return { ...propertyData };
+      });
     }
   }, [propertyData]);
 
@@ -74,18 +80,17 @@ export function UpdatePropertyDialog({
               Loại bất động sản <span className="text-red-500">*</span>
             </Label>
             <Select
-              value={formData.propertyType}
+              value={formData.LoaiBDS}
               onValueChange={(value) =>
-                setFormData({ ...formData, propertyType: value })
+                setFormData({ ...formData, LoaiBDS: value })
               }
             >
               <SelectTrigger id="propertyType">
-                <SelectValue placeholder="Chọn loại bất động sản" />
+                <SelectValue placeholder={formData.LoaiBDS} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="house">Nhà ở</SelectItem>
-                <SelectItem value="apartment">Căn hộ</SelectItem>
-                <SelectItem value="land">Đất nền</SelectItem>
+                <SelectItem value="Nhà ở">Nhà ở</SelectItem>
+                <SelectItem value="Kho xưởng">Kho xưởng</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -96,9 +101,9 @@ export function UpdatePropertyDialog({
             </Label>
             <Input
               id="address"
-              value={formData.address}
+              value={formData.DiaChi}
               onChange={(e) =>
-                setFormData({ ...formData, address: e.target.value })
+                setFormData({ ...formData, DiaChi: e.target.value })
               }
             />
           </div>
@@ -109,20 +114,20 @@ export function UpdatePropertyDialog({
             </Label>
             <Input
               id="area"
-              value={formData.area}
+              value={formData.DienTich}
               onChange={(e) =>
-                setFormData({ ...formData, area: e.target.value })
+                setFormData({ ...formData, DienTich: +e.target.value })
               }
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="price">Giá thuê</Label>
+            <Label htmlFor="price">Giá thuê (VNĐ)</Label>
             <Input
               id="price"
-              value={formData.price}
+              value={formData.GiaThueTheoThang}
               onChange={(e) =>
-                setFormData({ ...formData, price: e.target.value })
+                setFormData({ ...formData, GiaThueTheoThang: +e.target.value })
               }
             />
           </div>
@@ -132,43 +137,40 @@ export function UpdatePropertyDialog({
               Trạng thái <span className="text-red-500">*</span>
             </Label>
             <Select
-              value={formData.status}
+              value={formData.TrangThai}
               onValueChange={(value) =>
-                setFormData({ ...formData, status: value })
+                setFormData({ ...formData, TrangThai: value })
               }
             >
               <SelectTrigger id="status">
-                <SelectValue placeholder="Chọn trạng thái" />
+                <SelectValue placeholder={formData.TrangThai} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="available">Đang bán</SelectItem>
-                <SelectItem value="rented">Đã cho thuê</SelectItem>
-                <SelectItem value="sold">Đã bán</SelectItem>
+                <SelectItem value="Đã cho thuê">Đã cho thuê</SelectItem>
+                <SelectItem value="Chưa cho thuê">Chưa cho thuê</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="code">Mô tả</Label>
+            <Label htmlFor="desc">Mô tả</Label>
             <Input
-              id="code"
-              value={formData.code}
+              id="desc"
+              value={formData.MoTa}
               onChange={(e) =>
-                setFormData({ ...formData, code: e.target.value })
+                setFormData({ ...formData, MoTa: e.target.value })
               }
             />
           </div>
 
-          <div className="grid gap-2">
+          {/* <div className="grid gap-2">
             <Label htmlFor="location">
               Vĩ độ <span className="text-red-500">*</span>
             </Label>
             <Input
               id="location"
-              value={formData.location}
-              onChange={(e) =>
-                setFormData({ ...formData, location: e.target.value })
-              }
+              value={formData.x}
+              onChange={(e) => setFormData({ ...formData, x: +e.target.value })}
             />
           </div>
 
@@ -178,30 +180,30 @@ export function UpdatePropertyDialog({
             </Label>
             <Input
               id="size"
-              value={formData.size}
-              onChange={(e) =>
-                setFormData({ ...formData, size: e.target.value })
-              }
+              value={formData.y}
+              onChange={(e) => setFormData({ ...formData, y: +e.target.value })}
             />
-          </div>
+          </div> */}
 
           <div className="grid gap-2">
             <Label htmlFor="district">
               Tên quận/huyện <span className="text-red-500">*</span>
             </Label>
             <Select
-              value={formData.district}
+              value={formData.MaDVHC}
               onValueChange={(value) =>
-                setFormData({ ...formData, district: value })
+                setFormData({ ...formData, MaDVHC: value })
               }
             >
               <SelectTrigger id="district">
-                <SelectValue placeholder="Chọn quận/huyện" />
+                <SelectValue placeholder={formData.TenDVHC} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="district1">Quận Tân Phú</SelectItem>
-                <SelectItem value="district2">Quận 2</SelectItem>
-                <SelectItem value="district3">Quận 3</SelectItem>
+                {districts.map((dis) => (
+                  <SelectItem key={dis.MaDVHC} value={dis.MaDVHC}>
+                    {dis.TenDVHC}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -211,18 +213,20 @@ export function UpdatePropertyDialog({
               Tên người quản lý <span className="text-red-500">*</span>
             </Label>
             <Select
-              value={formData.sector}
+              value={formData.MaNQL}
               onValueChange={(value) =>
-                setFormData({ ...formData, sector: value })
+                setFormData({ ...formData, MaNQL: value })
               }
             >
               <SelectTrigger id="sector">
-                <SelectValue placeholder="Chọn nguời quản lý" />
+                <SelectValue placeholder={formData.HoTen} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="sector1">Ng. Văn A</SelectItem>
-                <SelectItem value="sector2">Ng. 2</SelectItem>
-                <SelectItem value="sector3">Ng. 3</SelectItem>
+                {staffs.map((staff) => (
+                  <SelectItem key={staff.MaNQL} value={staff.MaNQL}>
+                    {staff.HoTen}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

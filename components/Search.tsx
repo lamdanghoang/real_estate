@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { districts, types } from "@/constants/constants";
+import { areas, districts, prices, types } from "@/constants/constants";
 
 const FormSchema = z.object({
   place: z.string({
@@ -72,7 +72,7 @@ export default function SelectForm() {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="w-48 h-7">
-                    <SelectValue placeholder="Tất cả" />
+                    <SelectValue placeholder="Chọn" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -96,7 +96,7 @@ export default function SelectForm() {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="w-48 h-7">
-                    <SelectValue placeholder="Tất cả" />
+                    <SelectValue placeholder="Chọn" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -124,9 +124,11 @@ export default function SelectForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="a">a</SelectItem>
-                  <SelectItem value="b">b</SelectItem>
-                  <SelectItem value="c">c</SelectItem>
+                  {areas.map((area, index) => (
+                    <SelectItem key={index} value={area}>
+                      {area}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -146,9 +148,11 @@ export default function SelectForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="a">a</SelectItem>
-                  <SelectItem value="b">b</SelectItem>
-                  <SelectItem value="c">c</SelectItem>
+                  {prices.map((price, index) => (
+                    <SelectItem key={index} value={price}>
+                      {price}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -157,7 +161,7 @@ export default function SelectForm() {
         />
         <Button
           type="submit"
-          className="px-5 bg-[#DCAE43] border border-[#B28326] font-bold"
+          className="px-5 bg-[#DCAE43] hover:bg-[#DCAE43]/80 border border-[#B28326] font-bold"
         >
           TÌM KIẾM
         </Button>

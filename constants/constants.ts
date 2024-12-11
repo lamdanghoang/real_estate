@@ -24,7 +24,17 @@ export const districts = [
   "Nhà bè",
 ];
 
-export const types = ["Căn hộ", "Nhà ở", "Văn phòng", "Kho/Xuởng"];
+export const types = ["Tất cả", "Căn hộ", "Nhà ở", "Văn phòng", "Kho/Xuởng"];
+
+export const areas = ["Tất cả", "Dưới 100m2", "100m2", "120m2", "140m2"];
+
+export const prices = [
+  "Tất cả",
+  "Dưới 10tr",
+  "10tr - 20tr",
+  "20tr - 30tr",
+  "30tr - 40tr",
+];
 
 export const tab_list = [
   {
