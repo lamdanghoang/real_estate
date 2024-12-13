@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@arcgis/core": "^4.31.6",
+    "@arcgis/map-components-react": "^4.31.6",
+    "@esri/react-arcgis": "^5.2.0",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",

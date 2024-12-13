@@ -7,9 +7,9 @@ app.use(cors());
 
 // Create a connection pool
 const pool = mysql.createPool({
-  host: "34.87.169.125",
-  user: "lamdanghoang",
-  password: "danghoanglam",
+  host: "localhost",
+  user: "root",
+  password: "",
   database: "QuanLyBatDongSan",
   waitForConnections: true,
   connectionLimit: 10,
@@ -37,13 +37,20 @@ app.get("/nguoiquanly/danhsach", async (req, res) => {
 });
 
 app.get("/dagiac/danhsach", async (req, res) => {
-  await handleQuery(res, "SELECT * FROM DaGiac");
+  await handleQuery(
+    res,
+    "SELECT DaGiac.MaDagiac, DonViHanhChinh.TenDVHC, DonViHanhChinh.LoaiDVHC, DaGiac.ToaDoRanhGioi FROM DaGiac INNER JOIN DonViHanhChinh ON DaGiac.MaDagiac = DonViHanhChinh.MaDagiac"
+  );
+});
+
+app.get("/diem/danhsach", async (req, res) => {
+  await handleQuery(res, "SELECT * FROM Diem");
 });
 
 app.get("/batdongsan/danhsach", async (req, res) => {
   await handleQuery(
     res,
-    "SELECT BatDongSan.*, NguoiQuanLy.HoTen, DonViHanhChinh.TenDVHC FROM BatDongSan INNER JOIN NguoiQuanLy ON BatDongSan.MaNQL = NguoiQuanLy.MaNQL INNER JOIN DonViHanhChinh ON BatDongSan.MaDVHC = DonViHanhChinh.MaDVHC"
+    "SELECT BatDongSan.*, NguoiQuanLy.HoTen, DonViHanhChinh.TenDVHC, Diem.* FROM BatDongSan INNER JOIN NguoiQuanLy ON BatDongSan.MaNQL = NguoiQuanLy.MaNQL INNER JOIN DonViHanhChinh ON BatDongSan.MaDVHC = DonViHanhChinh.MaDVHC INNER JOIN Diem ON BatDongSan.MaDiem = Diem.MaDiem"
   );
 });
 

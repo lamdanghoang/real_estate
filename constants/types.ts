@@ -11,6 +11,8 @@ export interface RealEstate {
   MaDVHC: string;
   HoTen: string;
   TenDVHC: string;
+  KinhDo: number;
+  ViDo: number;
 }
 
 export interface PropertyFormProps {
@@ -76,4 +78,19 @@ export interface District {
   TenDVHC: string;
   LoaiDVHC: string;
   MaDaGiac: string;
+}
+
+export interface Dagiac {
+  MaDagiac: string;
+  TenDVHC: string;
+  LoaiDVHC: string;
+  ToaDoRanhGioi: string;
+}
+
+export interface Boundary extends Dagiac {
+  polygon: GeoJsonPolygon;
+}
+export interface GeoJsonPolygon {
+  type: "polygon";
+  rings: number[][];
 }
