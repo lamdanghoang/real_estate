@@ -43,6 +43,12 @@ const FormSchema = z.object({
 export default function SelectForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      place: districts[0],
+      type: types[0],
+      area: areas[0],
+      price: prices[0],
+    },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -61,7 +67,7 @@ export default function SelectForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="py-8 flex items-end justify-between"
+        className="py-8 flex items-start justify-between"
       >
         <FormField
           control={form.control}
@@ -161,7 +167,7 @@ export default function SelectForm() {
         />
         <Button
           type="submit"
-          className="px-5 bg-[#DCAE43] hover:bg-[#DCAE43]/80 border border-[#B28326] font-bold"
+          className="my-auto px-5 bg-[#DCAE43] hover:bg-[#DCAE43]/80 border border-[#B28326] font-bold"
         >
           TÌM KIẾM
         </Button>

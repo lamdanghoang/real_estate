@@ -98,7 +98,7 @@ export default function CustomerTable() {
           <TableHeader className="sticky top-0 z-10 bg-white">
             <TableRow>
               <TableHead className="min-w-[100px]">Mã khách</TableHead>
-              <TableHead className="min-w-[150px]">Tên khách</TableHead>
+              <TableHead className="min-w-[200px]">Tên khách</TableHead>
               <TableHead className="min-w-[150px]">Số CCCD</TableHead>
               <TableHead className="min-w-[150px]">Điện thoại</TableHead>
               <TableHead className="min-w-[150px]">Email</TableHead>

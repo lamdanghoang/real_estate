@@ -54,6 +54,20 @@ app.get("/batdongsan/danhsach", async (req, res) => {
   );
 });
 
+app.get("/batdongsan/thongtin/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [[result]] = await pool.query(
+      `SELECT BatDongSan.*, NguoiQuanLy.HoTen, DonViHanhChinh.TenDVHC, Diem.* FROM BatDongSan INNER JOIN NguoiQuanLy ON BatDongSan.MaNQL = NguoiQuanLy.MaNQL INNER JOIN DonViHanhChinh ON BatDongSan.MaDVHC = DonViHanhChinh.MaDVHC INNER JOIN Diem ON BatDongSan.MaDiem = Diem.MaDiem WHERE BatDongSan.MaBDS = ?`,
+      [id]
+    );
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.get("/khachthue/danhsach", async (req, res) => {
   await handleQuery(res, "SELECT * FROM KhachThue");
 });

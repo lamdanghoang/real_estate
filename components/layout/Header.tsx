@@ -6,6 +6,7 @@ import { CircleUserRound } from "lucide-react";
 import { useContext } from "react";
 import GlobalContext from "@/context/store";
 import Logout from "@/assets/icons/logout";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   {
@@ -24,18 +25,22 @@ const navLinks = [
 
 export default function Header() {
   const { isConnected, setIsConnected } = useContext(GlobalContext);
+  const router = usePathname();
+  console.log(router);
   return (
     <header className="px-16 py-4 flex items-center gap-24 border border-b-[#B28326]">
       <Link href={"/"}>
         <Image src={logo} alt="logo" width={90} height={90} className="" />
       </Link>
       <div className="w-full flex justify-between items-center">
-        <nav className="flex gap-2">
+        <nav className="flex">
           {navLinks.map((item, index) => (
             <Link
               key={index}
               href={item.link}
-              className="px-4 py-1 leading-10 hover:bg-btnHover"
+              className={`px-4 py-1 leading-10 hover:bg-[#ECDC9B]/50 ${
+                router === item.link ? "bg-[#ECDC9B]" : ""
+              }`}
             >
               {item.text.toUpperCase()}
             </Link>
@@ -44,7 +49,9 @@ export default function Header() {
             <Link
               key="quanly"
               href="/manage"
-              className="px-4 py-1 leading-10 hover:bg-btnHover"
+              className={`px-4 py-1 leading-10 hover:bg-[#ECDC9B]/50 ${
+                router === "/manage" ? "bg-[#ECDC9B]" : ""
+              }`}
             >
               QUẢN LÝ
             </Link>
@@ -53,7 +60,9 @@ export default function Header() {
         {!isConnected ? (
           <Link href={"/login"}>
             <CircleUserRound
-              className="text-gray-50 bg-[#414143] rounded-full"
+              className={`text-gray-50 bg-[#414143] hover:bg-[#ECDC9B]/80 ${
+                router === "/login" ? "bg-[#ECDC9B]" : ""
+              } rounded-full`}
               strokeWidth={0.75}
               width={40}
               height={40}
@@ -64,6 +73,7 @@ export default function Header() {
             onClick={() => {
               setIsConnected(false);
             }}
+            className="text-[#414143] hover:text-[#414143]/50"
           >
             <Logout />
           </button>

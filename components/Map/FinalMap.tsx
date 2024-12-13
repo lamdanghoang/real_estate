@@ -5,13 +5,20 @@ import "@arcgis/core/assets/esri/themes/light/main.css";
 import MapView from "@arcgis/core/views/MapView";
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import Graphic from "@arcgis/core/Graphic";
-import Point from "@arcgis/core/geometry/Point";
-import Polygon from "@arcgis/core/geometry/Polygon";
-import Polyline from "@arcgis/core/geometry/Polyline";
 import { Boundary, Dagiac, RealEstate } from "@/constants/types";
 import { colors } from "@/constants/constants";
 
-const MultiGeometryMap: React.FC = () => {
+interface Props {
+  lon?: number;
+  lat?: number;
+  zoom?: number;
+}
+
+const MultiGeometryMap: React.FC<Props> = ({
+  lon = 106.6,
+  lat = 10.7,
+  zoom = 11,
+}) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<__esri.MapView | null>(null);
   const [graphicsLayer, setGraphicsLayer] =
@@ -37,8 +44,8 @@ const MultiGeometryMap: React.FC = () => {
     const mapView = new MapView({
       container: mapRef.current,
       map: map,
-      center: [106.6, 10.7], // Centered on Ho Chi Minh City
-      zoom: 11,
+      center: [lon, lat], // Centered on Ho Chi Minh City
+      zoom: zoom,
       highlightOptions: {
         color: "blue",
       },

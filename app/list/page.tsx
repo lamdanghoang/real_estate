@@ -1,37 +1,53 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Item from "@/components/Item";
-
-// Sample data array - replace text with your actual content
-const houses = [
-  { id: 1, text: "Nhà ở" },
-  { id: 2, text: "Căn hộ" },
-  { id: 3, text: "Nhà ở" },
-  { id: 4, text: "Nhà vương" },
-  { id: 5, text: "Nhà phòng" },
-  { id: 6, text: "Nhà ở" },
-  { id: 7, text: "Nhà vương" },
-  { id: 8, text: "Mua ở" },
-  { id: 9, text: "Nhà vương" },
-  { id: 10, text: "Nhà ở" },
-  { id: 11, text: "Nhà thu" },
-];
+import { RealEstate } from "@/constants/types";
+import Link from "next/link";
 
 export default function List() {
+  const [properties, setProperties] = useState<RealEstate[] | []>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-  const totalPages = Math.ceil(houses.length / itemsPerPage);
+  const totalPages = Math.ceil(properties.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentHouses = houses.slice(startIndex, endIndex);
+  const currentHouses = properties.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3003/batdongsan/danhsach",
+          {
+            method: "GET", // Explicitly set method
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json", // Add Accept header
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        setProperties(result);
+      } catch (error) {
+        console.error("Fetching properties failed:", error);
+      }
+    };
+
+    fetchProperties();
+  }, [properties]);
 
   return (
     <div className="container mx-auto py-8">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {currentHouses.map((house) => (
-          <Item />
+          <Link href={`/info/${house.MaBDS}`}>
+            <Item property={house} />
+          </Link>
         ))}
       </div>
 
@@ -49,6 +65,11 @@ export default function List() {
               key={i + 1}
               variant={currentPage === i + 1 ? "default" : "outline"}
               onClick={() => setCurrentPage(i + 1)}
+              className={
+                currentPage === i + 1
+                  ? "bg-[#ECDC9B] hover:bg-[#ECDC9B]/80 text-gray-800"
+                  : ""
+              }
             >
               {i + 1}
             </Button>

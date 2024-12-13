@@ -26,7 +26,7 @@ export default function Manage() {
               key={tab.value}
               value={tab.value}
               className="
-                w-full 
+                min-w-60 
                 bg-[#F1EFE9] 
                 border 
                 data-[state=active]:bg-[#DCAE43] 
