@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { District, RealEstate, StaffManager } from "@/constants/types";
+import toast from "react-hot-toast";
 
 interface UpdatePropertyDialogProps {
   open: boolean;
@@ -46,6 +47,8 @@ export function UpdatePropertyDialog({
     MaDVHC: "",
     HoTen: "",
     TenDVHC: "",
+    KinhDo: 0,
+    ViDo: 0,
   });
 
   useEffect(() => {
@@ -59,6 +62,7 @@ export function UpdatePropertyDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
+    toast.success("Thông tin bất động sản đã được cập nhật thành công!");
     console.log(formData);
     onOpenChange(false);
   };

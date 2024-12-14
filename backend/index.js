@@ -1,9 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
+const { parse, format } = require("date-fns");
 
 const app = express();
 app.use(cors());
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // Create a connection pool
 const pool = mysql.createPool({
@@ -16,7 +19,7 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// Generic function to handle database queries
+// Generic function to handle database
 const handleQuery = async (res, query) => {
   try {
     const [results] = await pool.query(query);
@@ -31,9 +34,118 @@ app.get("/", (req, res) => {
   res.send("Welcome to Real Estate Server!");
 });
 
-// Routes for different tables
 app.get("/nguoiquanly/danhsach", async (req, res) => {
   await handleQuery(res, "SELECT * FROM NguoiQuanLy");
+});
+
+app.post("/nguoiquanly/them", async (req, res) => {
+  try {
+    const {
+      HoTen,
+      NgayKhoiTao,
+      SoDienThoai,
+      Email,
+      TenDangNhap,
+      MatKhau,
+      VaiTro,
+      TrangThai,
+    } = req.body;
+
+    const formattedNgayKhoiTao = formatDate(NgayKhoiTao);
+
+    const [result] = await pool.execute(
+      "INSERT INTO NguoiQuanLy (HoTen, NgayKhoiTao, SoDienThoai, Email, TenDangNhap, MatKhau, VaiTro, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        HoTen,
+        formattedNgayKhoiTao,
+        SoDienThoai,
+        Email,
+        TenDangNhap,
+        MatKhau,
+        VaiTro,
+        TrangThai,
+      ]
+    );
+
+    res.status(200).json({
+      message: "Người quản lý đã được thêm thành công!",
+      userId: result.insertId,
+    });
+  } catch (error) {
+    console.error("Error adding người quản lý:", error);
+    res.status(400).json({
+      message: error.message || "Có lỗi xảy ra khi thêm người quản lý.",
+    });
+  }
+});
+
+app.put("/nguoiquanly/sua/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      HoTen,
+      NgayKhoiTao,
+      SoDienThoai,
+      Email,
+      TenDangNhap,
+      MatKhau,
+      VaiTro,
+      TrangThai,
+    } = req.body;
+    const formattedDate = formatDate(NgayKhoiTao);
+    const [result] = await pool.execute(
+      `UPDATE NguoiQuanLy 
+       SET HoTen = ?, NgayKhoiTao = ?, SoDienThoai = ?, Email = ?, 
+           TenDangNhap = ?, MatKhau = ?, VaiTro = ?, TrangThai = ? 
+       WHERE MaNQL = ?`,
+      [
+        HoTen,
+        formattedDate,
+        SoDienThoai,
+        Email,
+        TenDangNhap,
+        MatKhau,
+        VaiTro,
+        TrangThai,
+        id,
+      ]
+    );
+
+    if (result.affectedRows > 0) {
+      res
+        .status(200)
+        .json({ message: "Người quản lý đã được cập nhật thành công!" });
+    } else {
+      res.status(404).json({ message: "Người quản lý không tồn tại." });
+    }
+  } catch (error) {
+    console.error("Error updating người quản lý:", error);
+    res
+      .status(500)
+      .json({ message: "Có lỗi xảy ra khi cập nhật người quản lý." });
+  }
+});
+
+app.delete("/nguoiquanly/xoa/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [result] = await pool.execute(
+      "DELETE FROM NguoiQuanLy WHERE MaNQL = ?",
+      [id]
+    );
+
+    if (result.affectedRows > 0) {
+      res
+        .status(200)
+        .json({ message: "Người quản lý đã được xóa thành công!" });
+    } else {
+      res.status(404).json({ message: "Người quản lý không tồn tại." });
+    }
+  } catch (error) {
+    console.error("Error deleting người quản lý:", error);
+    res.status(500).json({ message: "Có lỗi xảy ra khi xóa người quản lý." });
+  }
 });
 
 app.get("/dagiac/danhsach", async (req, res) => {
@@ -89,3 +201,21 @@ const port = process.env.PORT || 3003;
 app.listen(port, () => {
   console.log(`Server listening on port http://localhost:${port}`);
 });
+
+// Date formatting with robust error handling
+const formatDate = (dateString) => {
+  try {
+    if (!dateString) return null;
+    const parsedDate = parse(dateString, "dd/MM/yyyy", new Date());
+
+    if (isNaN(parsedDate)) {
+      console.warn(`Invalid date format: ${dateString}`);
+      return null;
+    }
+
+    return format(parsedDate, "yyyy-MM-dd");
+  } catch (error) {
+    console.error("Date Formatting Error:", error);
+    return null;
+  }
+};

@@ -14,6 +14,7 @@ import { AddPropertyDialog } from "./AddRealEstate";
 import { UpdatePropertyDialog } from "./UpdateRealEstate";
 import { DeletePropertyDialog } from "./DeleteRealEstate";
 import { District, RealEstate, StaffManager } from "@/constants/types";
+import toast from "react-hot-toast";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -22,6 +23,7 @@ export default function RealEstateTable() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false); // Add state for update dialog
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isReload, setIsReload] = useState(false);
   const [properties, setProperties] = useState<RealEstate[] | []>([]);
   const [selectedProperty, setSelectedProperty] = useState<RealEstate>();
   const [staffs, setStaffs] = useState<StaffManager[]>([]);
@@ -100,7 +102,7 @@ export default function RealEstateTable() {
     fetchProperties();
     fetchStaffs();
     fetchDistricts();
-  }, []);
+  }, [isReload]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -131,7 +133,12 @@ export default function RealEstateTable() {
   const deleteConfirmHandler = () => {
     // Handle the delete operation here
     console.log("Deleting property:", selectedProperty?.MaBDS);
+    toast.success("Xóa thành công!");
     setSelectedProperty(undefined);
+  };
+
+  const reload = () => {
+    setIsReload(!isReload);
   };
 
   return (
@@ -215,6 +222,7 @@ export default function RealEstateTable() {
           </Button>
           <Button
             variant="outline"
+            onClick={reload}
             className="bg-[#ECDC9B] border-[#ECDC9B] text-[#333] hover:bg-[#ECDC9B]/50"
           >
             TẢI LẠI DANH SÁCH

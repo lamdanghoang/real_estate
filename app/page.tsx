@@ -70,7 +70,7 @@ export default function Home() {
       <FinalMap />
       <div className="mx-28 my-7 ">
         {properties.length > 0 ? (
-          <Slider {...sliderSettings} className="h-full">
+          <Slider {...sliderSettings} className="h-full" arrows={false}>
             {properties.map((house) => (
               <Link key={house.MaBDS} href={`/info/${house.MaBDS}`}>
                 <div className="h-72 max-h-[500px] px-2">

@@ -15,6 +15,7 @@ import { DeleteContractDialog } from "./DeleteContract";
 import { Contract } from "@/constants/types";
 import { Badge } from "../ui/badge";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -27,7 +28,7 @@ export default function ContractTable() {
   const [selectedContract, setSelectedContract] = useState<
     Contract | undefined
   >(undefined);
-
+  const [isReload, setIsReload] = useState(false);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   // const paginatedData = DATA.slice(startIndex, endIndex);
@@ -53,7 +54,7 @@ export default function ContractTable() {
     };
 
     fetchContracts();
-  }, []);
+  }, [isReload]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -84,7 +85,12 @@ export default function ContractTable() {
   const deleteConfirmHandler = () => {
     // Handle the delete operation here
     console.log("Deleting contract:", selectedContract?.MaHopDong);
+    toast.success("Xóa thành công!");
     setSelectedContract(undefined);
+  };
+
+  const reload = () => {
+    setIsReload(!isReload);
   };
 
   return (
@@ -184,6 +190,7 @@ export default function ContractTable() {
           </Button>
           <Button
             variant="outline"
+            onClick={reload}
             className="bg-[#ECDC9B] border-[#ECDC9B] text-[#333] hover:bg-[#ECDC9B]/50"
           >
             TẢI LẠI DANH SÁCH

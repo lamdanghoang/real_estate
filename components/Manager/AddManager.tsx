@@ -27,6 +27,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import toast from "react-hot-toast";
 
 const FormSchema = z.object({
   NgayKhoiTao: z.string().min(2, {
@@ -85,6 +86,7 @@ export function AddManagerDialog({
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
     console.log(data);
+    postData(data);
     onOpenChange(false);
   };
 
@@ -284,3 +286,21 @@ export function AddManagerDialog({
     </Dialog>
   );
 }
+
+const postData = async (formData: z.infer<typeof FormSchema>) => {
+  try {
+    const response = await fetch("http://localhost:3003/nguoiquanly/them", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      console.log("Người quản lý đã được thêm thành công");
+      toast.success("Người quản lý mới đã được thêm thành công!");
+    }
+  } catch (error) {
+    console.error("Error", error);
+  }
+};

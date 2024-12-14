@@ -19,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import toast from "react-hot-toast";
 
 const FormSchema = z.object({
   TenKhachThue: z.string().min(1, "Vui lòng nhập tên khách thuê."),
@@ -52,6 +53,7 @@ export function AddCustomerDialog({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
+    toast.success("Khách thuê mới đã được thêm thành công!");
     console.log(data);
     onOpenChange(false);
   };

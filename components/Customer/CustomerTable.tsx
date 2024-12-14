@@ -13,6 +13,7 @@ import { AddCustomerDialog } from "./AddCustomer";
 import { UpdateCustomerDialog } from "./UpdateCustomer";
 import { DeleteCustomerDialog } from "./DeleteCustomer";
 import { Customer, StaffManager } from "@/constants/types";
+import toast from "react-hot-toast";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,6 +26,7 @@ export default function CustomerTable() {
   const [selectedCustomer, setSelectedCustomer] = useState<
     Customer | undefined
   >(undefined);
+  const [isReload, setIsReload] = useState(false);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   // const paginatedData = DATA.slice(startIndex, endIndex);
@@ -53,7 +55,7 @@ export default function CustomerTable() {
     };
 
     fetchCustomers();
-  }, []);
+  }, [isReload]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -84,7 +86,12 @@ export default function CustomerTable() {
   const deleteConfirmHandler = () => {
     // Handle the delete operation here
     console.log("Deleting property:", selectedCustomer?.MaKhachThue);
+    toast.success("Xóa thành công!");
     setSelectedCustomer(undefined);
+  };
+
+  const reload = () => {
+    setIsReload(!isReload);
   };
 
   return (
@@ -153,6 +160,7 @@ export default function CustomerTable() {
           </Button>
           <Button
             variant="outline"
+            onClick={reload}
             className="bg-[#ECDC9B] border-[#ECDC9B] text-[#333] hover:bg-[#ECDC9B]/50"
           >
             TẢI LẠI DANH SÁCH

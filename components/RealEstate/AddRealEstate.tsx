@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/form";
 import { District, StaffManager } from "@/constants/types";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 const FormSchema = z.object({
   LoaiBDS: z.string().min(2, {
@@ -132,6 +134,7 @@ export function AddPropertyDialog({
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
     console.log(data);
+    toast.success("Bất động sản mới đã được thêm thành công!");
     onOpenChange(false);
   };
 

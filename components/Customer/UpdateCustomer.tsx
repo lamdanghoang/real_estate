@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Customer } from "@/constants/types";
+import toast from "react-hot-toast";
 
 interface UpdateCustomerDialogProps {
   open: boolean;
@@ -40,6 +41,7 @@ export function UpdateCustomerDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
+    toast.success("Thông tin khách thuê đã được cập nhật thành công!");
     console.log(formData);
     onOpenChange(false);
   };

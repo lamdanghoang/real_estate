@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import GlobalContext from "@/context/store";
 import { StaffManager } from "@/constants/types";
+import toast from "react-hot-toast";
 
 const FormSchema = z.object({
   TenDangNhap: z.string().min(2, {
@@ -68,9 +69,14 @@ export default function Login() {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const role = checkValid(staffs, data);
     if (role) {
-      router.push("/manage");
-      setIsConnected(true);
-      role.VaiTro === "Chủ sở hữu" && setIsOwner(true);
+      toast.success("Đăng nhập thành công!");
+      setTimeout(() => {
+        router.push("/manage");
+        setIsConnected(true);
+        role.VaiTro === "Chủ sở hữu" && setIsOwner(true);
+      }, 1000);
+    } else {
+      toast.error("Sai thông tin đăng nhập. Vui lòng thử lại!");
     }
   }
   return (
@@ -104,7 +110,7 @@ export default function Login() {
               </FormItem>
             )}
           />
-          <div className="flex gap-4 justify-end">
+          <div className="flex gap-2 justify-end">
             <Button
               type="submit"
               className="bg-[#DCAE43] text-[#333333] hover:bg-[#DCAE43]/80"
@@ -119,6 +125,14 @@ export default function Login() {
               className="bg-[#ECDC9B] text-[#333333] hover:bg-[#DCAE43]/60"
             >
               HỦY
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="bg-[#F1E7CB] hover:bg-[#F1E7CB]/50"
+              onClick={() => form.reset(undefined, { keepValues: false })}
+            >
+              LÀM MỚI
             </Button>
           </div>
         </form>

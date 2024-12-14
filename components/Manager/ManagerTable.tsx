@@ -14,6 +14,7 @@ import { UpdateManagerDialog } from "./UpdateManager";
 import { DeleteManagerDialog } from "./DeleteManager";
 import { StaffManager } from "@/constants/types";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -26,7 +27,7 @@ export default function ManagerTable() {
   const [selectedStaff, setSelectedStaff] = useState<StaffManager | undefined>(
     undefined
   );
-
+  const [isReload, setIsReload] = useState(false);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   // const paginatedData = DATA.slice(startIndex, endIndex);
@@ -55,14 +56,17 @@ export default function ManagerTable() {
     };
 
     fetchStaffs();
-  }, []);
+  }, [isReload]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
   const clickHandler = (staff: StaffManager) => {
-    setSelectedStaff(staff);
+    setSelectedStaff({
+      ...staff,
+      NgayKhoiTao: format(new Date(staff.NgayKhoiTao), "dd/MM/yyyy"),
+    });
   };
 
   const updateClickHandler = () => {
@@ -86,7 +90,14 @@ export default function ManagerTable() {
   const deleteConfirmHandler = () => {
     // Handle the delete operation here
     console.log("Deleting property:", selectedStaff?.MaNQL);
+    if (selectedStaff) {
+      deleteData(selectedStaff.MaNQL);
+    }
     setSelectedStaff(undefined);
+  };
+
+  const reload = () => {
+    setIsReload(!isReload);
   };
 
   return (
@@ -161,6 +172,7 @@ export default function ManagerTable() {
           </Button>
           <Button
             variant="outline"
+            onClick={reload}
             className="bg-[#ECDC9B] border-[#ECDC9B] text-[#333] hover:bg-[#ECDC9B]/50"
           >
             TẢI LẠI DANH SÁCH
@@ -184,3 +196,23 @@ export default function ManagerTable() {
     </div>
   );
 }
+
+const deleteData = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3003/nguoiquanly/xoa/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (response.ok) {
+      console.log("Xóa thành công!");
+      toast.success("Xóa thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

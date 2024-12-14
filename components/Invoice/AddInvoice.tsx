@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Contract } from "@/constants/types";
+import toast from "react-hot-toast";
 
 const FormSchema = z.object({
   NgayLapHoaDon: z.string().min(1, "Vui lòng nhập ngày lập hóa đơn."),
@@ -80,6 +81,7 @@ export function AddContractDialog({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
+    toast.success("Hóa đơn mới đã được thêm thành công!");
     console.log(data);
     onOpenChange(false);
   };

@@ -15,6 +15,7 @@ import { DeleteInvoiceDialog } from "./DeleteInvoice";
 import { Contract, Invoice } from "@/constants/types";
 import { Badge } from "../ui/badge";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,7 +29,7 @@ export default function ContractTable() {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | undefined>(
     undefined
   );
-
+  const [isReload, setIsReload] = useState(false);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   // const paginatedData = DATA.slice(startIndex, endIndex);
@@ -73,7 +74,7 @@ export default function ContractTable() {
 
     fetchInvoices();
     fetchContracts();
-  }, []);
+  }, [isReload]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -104,7 +105,12 @@ export default function ContractTable() {
   const deleteConfirmHandler = () => {
     // Handle the delete operation here
     console.log("Deleting invoice:", selectedInvoice?.MaHoaDon);
+    toast.success("Xóa thành công!");
     setSelectedInvoice(undefined);
+  };
+
+  const reload = () => {
+    setIsReload(!isReload);
   };
 
   return (
@@ -202,6 +208,7 @@ export default function ContractTable() {
           </Button>
           <Button
             variant="outline"
+            onClick={reload}
             className="bg-[#ECDC9B] border-[#ECDC9B] text-[#333] hover:bg-[#ECDC9B]/50"
           >
             TẢI LẠI DANH SÁCH

@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { StaffManager } from "@/constants/types";
+import toast from "react-hot-toast";
 
 interface UpdateManagerDialogProps {
   open: boolean;
@@ -51,7 +52,7 @@ export function UpdateManagerDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
-    console.log(formData);
+    updateData(formData);
     onOpenChange(false);
   };
 
@@ -207,3 +208,37 @@ export function UpdateManagerDialog({
     </Dialog>
   );
 }
+
+const updateData = async (formData: {
+  MaNQL: string;
+  NgayKhoiTao: string;
+  HoTen: string;
+  SoDienThoai: string;
+  Email: string;
+  TenDangNhap: string;
+  MatKhau: string;
+  VaiTro: string;
+  TrangThai: string;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3003/nguoiquanly/sua/${formData.MaNQL}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (response.ok) {
+      console.log("Người quản lý đã được cập nhật thành công!");
+      toast.success("Thông tin người quản lý đã được cập nhật thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Contract, Invoice } from "@/constants/types";
+import toast from "react-hot-toast";
 
 interface UpdateInvoiceDialogProps {
   open: boolean;
@@ -52,6 +53,7 @@ export function UpdateInvoiceDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
+    toast.success("Thông tin hóa đơn đã được cập nhật thành công!");
     console.log(formData);
     onOpenChange(false);
   };

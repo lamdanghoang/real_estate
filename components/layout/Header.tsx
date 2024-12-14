@@ -7,6 +7,7 @@ import { useContext, useEffect } from "react";
 import GlobalContext from "@/context/store";
 import Logout from "@/assets/icons/logout";
 import { usePathname, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const navLinks = [
   {
@@ -73,6 +74,7 @@ export default function Header() {
           <button
             onClick={() => {
               route.push("/");
+              toast.success("Đăng xuất thành công!");
               setIsConnected(false);
               setIsOwner(false);
             }}

@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { GlobalContextProvider } from "@/context/store";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,6 +37,7 @@ export default function RootLayout({
           <Header />
           <main className="bg-bodyBg flex flex-col flex-grow">{children}</main>
           <Footer />
+          <Toaster />
         </GlobalContextProvider>
       </body>
     </html>
