@@ -13,6 +13,7 @@ import { AddManagerDialog } from "./AddManager";
 import { UpdateManagerDialog } from "./UpdateManager";
 import { DeleteManagerDialog } from "./DeleteManager";
 import { StaffManager } from "@/constants/types";
+import { format } from "date-fns";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -118,7 +119,9 @@ export default function ManagerTable() {
                 }`}
               >
                 <TableCell className="font-medium">{item.MaNQL}</TableCell>
-                <TableCell>{item.NgayKhoiTao}</TableCell>
+                <TableCell>
+                  {format(new Date(item.NgayKhoiTao), "dd/MM/yyyy")}
+                </TableCell>
                 <TableCell>{item.HoTen}</TableCell>
                 <TableCell>{item.SoDienThoai}</TableCell>
                 <TableCell>{item.Email}</TableCell>

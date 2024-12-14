@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,7 +11,25 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const FormSchema = z.object({
+  TenKhachThue: z.string().min(1, "Vui lòng nhập tên khách thuê."),
+  SoCCCD: z.string().min(1, "Vui lòng nhập số CCCD."),
+  SoDienThoai: z.string().min(1, "Vui lòng nhập số điện thoại."),
+  Email: z
+    .string()
+    .email("Vui lòng nhập email hợp lệ.")
+    .optional()
+    .or(z.literal("")),
+});
 
 interface AddCustomerDialogProps {
   open: boolean;
@@ -20,121 +40,136 @@ export function AddCustomerDialog({
   open,
   onOpenChange,
 }: AddCustomerDialogProps) {
-  const [formData, setFormData] = useState({
-    MaKhachThue: "",
-    TenKhachThue: "",
-    SoCCCD: "",
-    SoDienThoai: "",
-    Email: "",
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      TenKhachThue: "",
+      SoCCCD: "",
+      SoDienThoai: "",
+      Email: "",
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
-    console.log(formData);
+    console.log(data);
     onOpenChange(false);
   };
 
   const handleReset = () => {
-    setFormData((prev) => {
-      return {
-        MaKhachThue: "",
-        TenKhachThue: "",
-        SoCCCD: "",
-        SoDienThoai: "",
-        Email: "",
-      };
-    });
+    form.reset(undefined, { keepValues: false });
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(newOpen) => {
+        if (!newOpen) {
+          handleReset();
+        }
+        onOpenChange(newOpen);
+      }}
+    >
       <DialogContent className="max-w-[500px] max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">
             THÊM KHÁCH THUÊ
           </DialogTitle>
         </DialogHeader>
-        <form
-          onSubmit={handleSubmit}
-          className="grid gap-4 overflow-y-auto pr-2"
-        >
-          <div className="grid gap-2">
-            <Label htmlFor="name">
-              Tên khách <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="name"
-              value={formData.TenKhachThue}
-              onChange={(e) =>
-                setFormData({ ...formData, TenKhachThue: e.target.value })
-              }
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="grid gap-4 overflow-y-auto pr-2"
+          >
+            <FormField
+              control={form.control}
+              name="TenKhachThue"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="TenKhachThue">
+                    Tên khách <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input id="TenKhachThue" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="cccd">
-              Số CCCD <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="cccd"
-              value={formData.SoCCCD}
-              onChange={(e) =>
-                setFormData({ ...formData, SoCCCD: e.target.value })
-              }
+            <FormField
+              control={form.control}
+              name="SoCCCD"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="SoCCCD">
+                    Số CCCD <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input id="SoCCCD" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="phone">
-              Điện thoại <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="phone"
-              value={formData.SoDienThoai}
-              onChange={(e) =>
-                setFormData({ ...formData, SoDienThoai: e.target.value })
-              }
+            <FormField
+              control={form.control}
+              name="SoDienThoai"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="SoDienThoai">
+                    Điện thoại <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input id="SoDienThoai" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              value={formData.Email}
-              onChange={(e) =>
-                setFormData({ ...formData, Email: e.target.value })
-              }
+            <FormField
+              control={form.control}
+              name="Email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="Email">Email</FormLabel>
+                  <FormControl>
+                    <Input id="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div className="flex justify-center gap-2 mt-4 sticky bottom-0 bg-background pt-2 border-t">
-            <Button
-              type="submit"
-              variant="outline"
-              className="bg-[#DCAE43] hover:bg-[#DCAE43]/80"
-            >
-              Lưu lại
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="bg-[#ECDC9B] hover:bg-[#ECDC9B]/50"
-              onClick={() => onOpenChange(false)}
-            >
-              Hủy
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="bg-[#F1E7CB] hover:bg-[#F1E7CB]/50"
-              onClick={handleReset}
-            >
-              Làm mới
-            </Button>
-          </div>
-        </form>
+            <div className="flex justify-center gap-2 mt-4 sticky bottom-0 bg-background pt-2">
+              <Button
+                type="submit"
+                variant="outline"
+                className="bg-[#DCAE43] hover:bg-[#DCAE43]/80"
+              >
+                Lưu lại
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="bg-[#ECDC9B] hover:bg-[#ECDC9B]/50"
+                onClick={() => onOpenChange(false)}
+              >
+                Hủy
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="bg-[#F1E7CB] hover:bg-[#F1E7CB]/50"
+                onClick={handleReset}
+              >
+                Làm mới
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

@@ -25,7 +25,6 @@ export default function CustomerTable() {
   const [selectedCustomer, setSelectedCustomer] = useState<
     Customer | undefined
   >(undefined);
-
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   // const paginatedData = DATA.slice(startIndex, endIndex);

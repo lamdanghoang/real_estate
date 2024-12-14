@@ -43,13 +43,19 @@ export default function List() {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {currentHouses.map((house) => (
-          <Link href={`/info/${house.MaBDS}`}>
-            <Item property={house} />
-          </Link>
-        ))}
-      </div>
+      {currentHouses.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 h-full">
+          {currentHouses.map((house) => (
+            <Link href={`/info/${house.MaBDS}`}>
+              <Item property={house} />
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <h1 className="my-auto text-center font-bold">
+          Không có dữ liệu. Vui lòng kiểm tra lại.
+        </h1>
+      )}
 
       {totalPages > 1 && (
         <div className="flex justify-center mt-8 space-x-2">

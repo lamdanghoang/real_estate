@@ -14,33 +14,64 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import GlobalContext from "@/context/store";
+import { StaffManager } from "@/constants/types";
 
 const FormSchema = z.object({
-  username: z.string().min(2, {
+  TenDangNhap: z.string().min(2, {
     message: "Vui lòng nhập tên người dùng.",
   }),
-  password: z.string().min(2, {
+  MatKhau: z.string().min(2, {
     message: "Vui lòng nhập mật khẩu.",
   }),
 });
 
 export default function Login() {
-  const { setIsConnected } = useContext(GlobalContext);
+  const { setIsConnected, setIsOwner } = useContext(GlobalContext);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      TenDangNhap: "",
+      MatKhau: "",
     },
   });
   const router = useRouter();
+  const [staffs, setStaffs] = useState<StaffManager[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3003/nguoiquanly/danhsach",
+          {
+            method: "GET", // Explicitly set method
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json", // Add Accept header
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        setStaffs(result);
+      } catch (error) {
+        console.error("Fetching districts failed:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(JSON.stringify(data, null, 2));
-    router.push("/manage");
-    setIsConnected(true);
+    const role = checkValid(staffs, data);
+    if (role) {
+      router.push("/manage");
+      setIsConnected(true);
+      role.VaiTro === "Chủ sở hữu" && setIsOwner(true);
+    }
   }
   return (
     <div className="m-auto p-5 w-1/3 bg-[#DCDDD3] flex flex-col items-center border">
@@ -49,7 +80,7 @@ export default function Login() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
           <FormField
             control={form.control}
-            name="username"
+            name="TenDangNhap"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tên đăng nhập</FormLabel>
@@ -62,7 +93,7 @@ export default function Login() {
           />
           <FormField
             control={form.control}
-            name="password"
+            name="MatKhau"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Mật khẩu</FormLabel>
@@ -94,4 +125,17 @@ export default function Login() {
       </Form>
     </div>
   );
+}
+
+function checkValid(
+  list: StaffManager[],
+  info: { TenDangNhap: string; MatKhau: string }
+) {
+  const staff = list.find((item) => {
+    return (
+      item.TenDangNhap === info.TenDangNhap && item.MatKhau === info.MatKhau
+    );
+  });
+
+  return staff;
 }

@@ -10,7 +10,7 @@ import ContractTable from "@/components/Contract/ContractTable";
 import InvoiceTable from "@/components/Invoice/InvoiceTable";
 
 export default function Manage() {
-  const { isConnected } = useContext(GlobalContext);
+  const { isConnected, isOwner } = useContext(GlobalContext);
   const [activeTab, setActiveTab] = useState("batdongsan");
 
   return isConnected ? (
@@ -39,6 +39,7 @@ export default function Manage() {
                 py-2
                 hover:bg-[#DCAE43]/50
               "
+              disabled={tab.value === "nguoiquanly" && !isOwner}
             >
               {tab.name}
             </TabsTrigger>

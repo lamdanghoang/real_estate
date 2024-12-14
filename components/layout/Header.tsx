@@ -3,10 +3,10 @@ import Image from "next/image";
 import logo from "@/assets/logo.svg";
 import Link from "next/link";
 import { CircleUserRound } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import GlobalContext from "@/context/store";
 import Logout from "@/assets/icons/logout";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const navLinks = [
   {
@@ -24,9 +24,10 @@ const navLinks = [
 ];
 
 export default function Header() {
-  const { isConnected, setIsConnected } = useContext(GlobalContext);
+  const { isConnected, setIsConnected, setIsOwner } = useContext(GlobalContext);
   const router = usePathname();
-  console.log(router);
+  const route = useRouter();
+
   return (
     <header className="px-16 py-4 flex items-center gap-24 border border-b-[#B28326]">
       <Link href={"/"}>
@@ -71,7 +72,9 @@ export default function Header() {
         ) : (
           <button
             onClick={() => {
+              route.push("/");
               setIsConnected(false);
+              setIsOwner(false);
             }}
             className="text-[#414143] hover:text-[#414143]/50"
           >

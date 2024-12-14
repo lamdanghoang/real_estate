@@ -26,36 +26,9 @@ export default function RealEstateTable() {
   const [selectedProperty, setSelectedProperty] = useState<RealEstate>();
   const [staffs, setStaffs] = useState<StaffManager[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
-
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   // const paginatedData = DATA.slice(startIndex, endIndex);
-
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:3003/batdongsan/danhsach",
-          {
-            method: "GET", // Explicitly set method
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json", // Add Accept header
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const result = await response.json();
-        setProperties(result);
-      } catch (error) {
-        console.error("Fetching properties failed:", error);
-      }
-    };
-
-    fetchProperties();
-  }, []);
 
   useEffect(() => {
     const fetchStaffs = async () => {
@@ -102,6 +75,29 @@ export default function RealEstateTable() {
       }
     };
 
+    const fetchProperties = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3003/batdongsan/danhsach",
+          {
+            method: "GET", // Explicitly set method
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json", // Add Accept header
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result = await response.json();
+        setProperties(result);
+      } catch (error) {
+        console.error("Fetching properties failed:", error);
+      }
+    };
+
+    fetchProperties();
     fetchStaffs();
     fetchDistricts();
   }, []);

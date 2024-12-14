@@ -1,7 +1,5 @@
-import Image from "next/image";
-import itemMap from "@/assets/item-map.png";
-import itemImg from "@/assets/item.png";
 import { Facebook, Mail, Printer } from "lucide-react";
+import MultiGeometryMap from "@/components/Map/FinalMap";
 
 export default function Contact() {
   return (
@@ -35,7 +33,9 @@ export default function Contact() {
             </div>
           </div>
         </div>
-        <Image src={itemMap} alt="map" />
+        <div className="w-1/2">
+          <MultiGeometryMap lon={106.63036} lat={10.77549} zoom={17} />
+        </div>
       </div>
     </div>
   );

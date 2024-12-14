@@ -14,6 +14,7 @@ import { UpdateContractDialog } from "./UpdateContract";
 import { DeleteContractDialog } from "./DeleteContract";
 import { Contract } from "@/constants/types";
 import { Badge } from "../ui/badge";
+import { format } from "date-fns";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -96,15 +97,17 @@ export default function ContractTable() {
           <TableHeader className="sticky top-0 z-10 bg-white">
             <TableRow>
               <TableHead className="min-w-[100px]">Mã HĐ</TableHead>
-              <TableHead className="min-w-[150px]">Ngày ký</TableHead>
-              <TableHead className="min-w-[150px]">Ngày bắt đầu</TableHead>
-              <TableHead className="min-w-[150px]">Ngày kết thúc</TableHead>
-              <TableHead className="min-w-[150px]">Giá thuê</TableHead>
-              <TableHead className="min-w-[150px]">Tiền đặt cọc</TableHead>
-              <TableHead className="min-w-[100px]">Số lượng khách</TableHead>
+              <TableHead className="min-w-[120px]">Ngày ký</TableHead>
+              <TableHead className="min-w-[120px]">Ngày bắt đầu</TableHead>
+              <TableHead className="min-w-[120px]">Ngày kết thúc</TableHead>
+              <TableHead className="min-w-[150px]">Giá thuê (VNĐ)</TableHead>
+              <TableHead className="min-w-[180px]">
+                Tiền đặt cọc (VNĐ)
+              </TableHead>
+              <TableHead className="min-w-[150px]">Số lượng khách</TableHead>
               <TableHead className="min-w-[150px]">Tình trạng HĐ</TableHead>
               <TableHead className="min-w-[100px]">Mã BĐS</TableHead>
-              <TableHead className="min-w-[100px]">Mã khách thuê</TableHead>
+              <TableHead className="min-w-[150px]">Mã khách thuê</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -119,9 +122,15 @@ export default function ContractTable() {
                 }`}
               >
                 <TableCell className="font-medium">{item.MaHopDong}</TableCell>
-                <TableCell>{item.NgayKyHopDong}</TableCell>
-                <TableCell>{item.NgayBatDau}</TableCell>
-                <TableCell>{item.NgayKetThuc}</TableCell>
+                <TableCell>
+                  {format(new Date(item.NgayKyHopDong), "dd/MM/yyyy")}
+                </TableCell>
+                <TableCell>
+                  {format(new Date(item.NgayBatDau), "dd/MM/yyyy")}
+                </TableCell>
+                <TableCell>
+                  {format(new Date(item.NgayKetThuc), "dd/MM/yyyy")}
+                </TableCell>
                 <TableCell>
                   {new Intl.NumberFormat("vi-VN").format(item.GiaThue)}
                 </TableCell>

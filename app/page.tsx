@@ -69,17 +69,23 @@ export default function Home() {
       <SelectForm />
       <FinalMap />
       <div className="mx-28 my-7 ">
-        <Slider {...sliderSettings} className="h-full">
-          {properties.map((house) => (
-            <Link href={`/info/${house.MaBDS}`}>
-              <div key={house.MaBDS} className="h-72 max-h-[500px] px-2">
-                <div className="h-full">
-                  <Item property={house} />
+        {properties.length > 0 ? (
+          <Slider {...sliderSettings} className="h-full">
+            {properties.map((house) => (
+              <Link key={house.MaBDS} href={`/info/${house.MaBDS}`}>
+                <div className="h-72 max-h-[500px] px-2">
+                  <div className="h-full">
+                    <Item property={house} />
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
-        </Slider>
+              </Link>
+            ))}
+          </Slider>
+        ) : (
+          <h1 className="my-auto text-center font-bold">
+            Không có dữ liệu. Vui lòng kiểm tra lại.
+          </h1>
+        )}
       </div>
     </div>
   );

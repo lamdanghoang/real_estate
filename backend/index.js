@@ -16,10 +16,6 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-app.get("/", (req, res) => {
-  res.send("Welcome to Real Estate Server!");
-});
-
 // Generic function to handle database queries
 const handleQuery = async (res, query) => {
   try {
@@ -30,6 +26,10 @@ const handleQuery = async (res, query) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+app.get("/", (req, res) => {
+  res.send("Welcome to Real Estate Server!");
+});
 
 // Routes for different tables
 app.get("/nguoiquanly/danhsach", async (req, res) => {

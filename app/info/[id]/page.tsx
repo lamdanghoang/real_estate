@@ -39,7 +39,7 @@ export default function Info() {
 
     fetchProperty();
   }, [params.id]);
-  return (
+  return property ? (
     <div className="px-6 py-10 my-auto flex justify-between gap-4">
       <div className="w-1/2">
         <div className="px-16 py-4 ">
@@ -129,8 +129,17 @@ export default function Info() {
         </div>
       </div>
       <div className="w-1/2">
-        <MultiGeometryMap />
+        <MultiGeometryMap
+          lon={property?.KinhDo}
+          lat={property?.ViDo}
+          zoom={17}
+        />
       </div>
     </div>
+  ) : (
+    <h1 className="my-auto text-center font-bold">
+      Không tìm thấy thông tin bất động sản. Vui lòng kiểm tra hoặc thử lại lần
+      sau.
+    </h1>
   );
 }

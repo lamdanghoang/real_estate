@@ -15,9 +15,9 @@ interface Props {
 }
 
 const MultiGeometryMap: React.FC<Props> = ({
-  lon = 106.6,
-  lat = 10.7,
-  zoom = 11,
+  lon = 106.68139814666989,
+  lat = 10.775908207858429,
+  zoom = 12,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<__esri.MapView | null>(null);
@@ -44,7 +44,7 @@ const MultiGeometryMap: React.FC<Props> = ({
     const mapView = new MapView({
       container: mapRef.current,
       map: map,
-      center: [lon, lat], // Centered on Ho Chi Minh City
+      center: [lon, lat],
       zoom: zoom,
       highlightOptions: {
         color: "blue",

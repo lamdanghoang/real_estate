@@ -14,6 +14,7 @@ import { UpdateInvoiceDialog } from "./UpdateInvoice";
 import { DeleteInvoiceDialog } from "./DeleteInvoice";
 import { Contract, Invoice } from "@/constants/types";
 import { Badge } from "../ui/badge";
+import { format } from "date-fns";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -116,9 +117,9 @@ export default function ContractTable() {
           <TableHeader className="sticky top-0 z-10 bg-white">
             <TableRow>
               <TableHead className="min-w-[120px]">Mã hóa đơn</TableHead>
-              <TableHead className="min-w-[150px]">Ngày lập</TableHead>
-              <TableHead className="min-w-[150px]">Ngày hết hạn</TableHead>
-              <TableHead className="min-w-[150px]">Số tiền</TableHead>
+              <TableHead className="min-w-[120px]">Ngày lập</TableHead>
+              <TableHead className="min-w-[120px]">Ngày hết hạn</TableHead>
+              <TableHead className="min-w-[150px]">Số tiền (VNĐ)</TableHead>
               <TableHead className="min-w-[150px]">
                 Ngày thanh toán thực tế
               </TableHead>
@@ -143,12 +144,18 @@ export default function ContractTable() {
                 }`}
               >
                 <TableCell className="font-medium">{item.MaHoaDon}</TableCell>
-                <TableCell>{item.NgayLapHoaDon}</TableCell>
-                <TableCell>{item.NgayHetHan}</TableCell>
+                <TableCell>
+                  {format(new Date(item.NgayLapHoaDon), "dd/MM/yyyy")}
+                </TableCell>
+                <TableCell>
+                  {format(new Date(item.NgayHetHan), "dd/MM/yyyy")}
+                </TableCell>
                 <TableCell>
                   {new Intl.NumberFormat("vi-VN").format(item.SoTien)}
                 </TableCell>
-                <TableCell>{item.NgayThanhToanThucTe}</TableCell>
+                <TableCell>
+                  {format(new Date(item.NgayThanhToanThucTe), "dd/MM/yyyy")}
+                </TableCell>
                 <TableCell>
                   <Badge
                     variant="secondary"
