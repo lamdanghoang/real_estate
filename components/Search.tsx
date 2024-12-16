@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,43 +23,47 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { areas, districts, prices, types } from "@/constants/constants";
+import { SelectType } from "@/constants/types";
+import { Dispatch, SetStateAction } from "react";
 
 const FormSchema = z.object({
-  place: z.string({
+  MaDVHC: z.string({
     required_error: "Vui lòng chọn địa điểm.",
   }),
-  type: z.string({
+  LoaiBDS: z.string({
     required_error: "Vui lòng chọn loại bđs.",
   }),
-  area: z.string({
+  DienTich: z.string({
     required_error: "Vui lòng chọn diện tích.",
   }),
-  price: z.string({
+  GiaThueTheoThang: z.string({
     required_error: "Vui lòng chọn giá thuê mong muốn.",
   }),
 });
 
-export default function SelectForm() {
+interface Props {
+  onSelection: Dispatch<SetStateAction<SelectType>>;
+}
+
+const SelectForm: React.FC<Props> = ({ onSelection }) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      place: districts[0],
-      type: types[0],
-      area: areas[0],
-      price: prices[0],
+      MaDVHC: districts[0].MaDVHC,
+      LoaiBDS: types[0],
+      DienTich: areas[0],
+      GiaThueTheoThang: prices[0],
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    // toast({
-    //     title: "You submitted the following values:",
-    //     description: (
-    //         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //             <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //         </pre>
-    //     ),
-    // })
     console.log(JSON.stringify(data, null, 2));
+    onSelection((prevState) => {
+      return {
+        ...prevState,
+        ...data,
+      };
+    });
   }
 
   return (
@@ -71,7 +74,7 @@ export default function SelectForm() {
       >
         <FormField
           control={form.control}
-          name="place"
+          name="MaDVHC"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Địa điểm</FormLabel>
@@ -83,8 +86,8 @@ export default function SelectForm() {
                 </FormControl>
                 <SelectContent>
                   {districts.map((dist, index) => (
-                    <SelectItem key={index} value={dist}>
-                      {dist}
+                    <SelectItem key={index} value={dist.MaDVHC}>
+                      {dist.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -95,7 +98,7 @@ export default function SelectForm() {
         />
         <FormField
           control={form.control}
-          name="type"
+          name="LoaiBDS"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Loại bất động sản</FormLabel>
@@ -119,7 +122,7 @@ export default function SelectForm() {
         />
         <FormField
           control={form.control}
-          name="area"
+          name="DienTich"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Diện tích</FormLabel>
@@ -143,7 +146,7 @@ export default function SelectForm() {
         />
         <FormField
           control={form.control}
-          name="price"
+          name="GiaThueTheoThang"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Giá tiền thuê/tháng</FormLabel>
@@ -174,4 +177,6 @@ export default function SelectForm() {
       </form>
     </Form>
   );
-}
+};
+
+export default SelectForm;

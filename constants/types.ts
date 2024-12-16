@@ -83,7 +83,7 @@ export interface District {
 export interface Dagiac {
   MaDagiac: string;
   TenDVHC: string;
-  LoaiDVHC: string;
+  MaDVHC: string;
   ToaDoRanhGioi: string;
 }
 
@@ -93,4 +93,11 @@ export interface Boundary extends Dagiac {
 export interface GeoJsonPolygon {
   type: "polygon";
   rings: number[][];
+}
+
+export interface SelectType {
+  MaDVHC: string;
+  LoaiBDS: string;
+  DienTich: string;
+  GiaThueTheoThang: string;
 }

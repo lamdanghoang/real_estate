@@ -151,7 +151,18 @@ app.delete("/nguoiquanly/xoa/:id", async (req, res) => {
 app.get("/dagiac/danhsach", async (req, res) => {
   await handleQuery(
     res,
-    "SELECT DaGiac.MaDagiac, DonViHanhChinh.TenDVHC, DonViHanhChinh.LoaiDVHC, DaGiac.ToaDoRanhGioi FROM DaGiac INNER JOIN DonViHanhChinh ON DaGiac.MaDagiac = DonViHanhChinh.MaDagiac"
+    "SELECT DaGiac.MaDagiac, DonViHanhChinh.TenDVHC, DonViHanhChinh.MaDVHC, DaGiac.ToaDoRanhGioi FROM DaGiac INNER JOIN DonViHanhChinh ON DaGiac.MaDagiac = DonViHanhChinh.MaDagiac"
+  );
+});
+
+app.get("/dagiac/danhsach/:MaDVHC", async (req, res) => {
+  const { MaDVHC } = req.params;
+  await handleQuery(
+    res,
+    `SELECT DaGiac.MaDagiac, DonViHanhChinh.TenDVHC, DonViHanhChinh.MaDVHC, DaGiac.ToaDoRanhGioi 
+     FROM DaGiac 
+     INNER JOIN DonViHanhChinh ON DaGiac.MaDagiac = DonViHanhChinh.MaDagiac 
+     WHERE DonViHanhChinh.MaDVHC = '${MaDVHC}'`
   );
 });
 
@@ -163,6 +174,18 @@ app.get("/batdongsan/danhsach", async (req, res) => {
   await handleQuery(
     res,
     "SELECT BatDongSan.*, NguoiQuanLy.HoTen, DonViHanhChinh.TenDVHC, Diem.* FROM BatDongSan INNER JOIN NguoiQuanLy ON BatDongSan.MaNQL = NguoiQuanLy.MaNQL INNER JOIN DonViHanhChinh ON BatDongSan.MaDVHC = DonViHanhChinh.MaDVHC INNER JOIN Diem ON BatDongSan.MaDiem = Diem.MaDiem"
+  );
+});
+
+app.get("/batdongsan/danhsach/:MaDVHC", async (req, res) => {
+  const { MaDVHC } = req.params;
+  await handleQuery(
+    res,
+    `SELECT BatDongSan.*, NguoiQuanLy.HoTen, DonViHanhChinh.TenDVHC, Diem.* 
+     FROM BatDongSan INNER JOIN NguoiQuanLy ON BatDongSan.MaNQL = NguoiQuanLy.MaNQL 
+     INNER JOIN DonViHanhChinh ON BatDongSan.MaDVHC = DonViHanhChinh.MaDVHC 
+     INNER JOIN Diem ON BatDongSan.MaDiem = Diem.MaDiem
+     WHERE DonViHanhChinh.MaDVHC = '${MaDVHC}'`
   );
 });
 

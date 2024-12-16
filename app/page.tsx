@@ -3,7 +3,7 @@ import SelectForm from "@/components/Search";
 import Item from "@/components/Item";
 import FinalMap from "@/components/Map/FinalMap";
 import { useEffect, useState } from "react";
-import { RealEstate } from "@/constants/types";
+import { RealEstate, SelectType } from "@/constants/types";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -11,6 +11,12 @@ import Link from "next/link";
 
 export default function Home() {
   const [properties, setProperties] = useState<RealEstate[] | []>([]);
+  const [selections, setSelections] = useState<SelectType>({
+    MaDVHC: "",
+    LoaiBDS: "",
+    DienTich: "",
+    GiaThueTheoThang: "",
+  });
 
   const sliderSettings = {
     dots: true,
@@ -66,8 +72,8 @@ export default function Home() {
 
   return (
     <div className="px-6">
-      <SelectForm />
-      <FinalMap />
+      <SelectForm onSelection={setSelections} />
+      <FinalMap selection={selections} />
       <div className="mx-28 my-7 ">
         {properties.length > 0 ? (
           <Slider {...sliderSettings} className="h-full" arrows={false}>
