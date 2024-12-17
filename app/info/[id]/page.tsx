@@ -6,7 +6,7 @@ import { Facebook, Mail, Printer } from "lucide-react";
 import { useEffect, useState } from "react";
 import { RealEstate } from "@/constants/types";
 import { useParams } from "next/navigation";
-import MultiGeometryMap from "@/components/Map/FinalMap";
+import SingleMap from "@/components/Map/SingleMap";
 
 export default function Info() {
   const [property, setProperty] = useState<RealEstate>();
@@ -129,7 +129,13 @@ export default function Info() {
         </div>
       </div>
       <div className="w-1/2">
-        <MultiGeometryMap
+        {/* <MultiGeometryMap
+          lon={property?.KinhDo}
+          lat={property?.ViDo}
+          zoom={17}
+          selectedProperty={property}
+        /> */}
+        <SingleMap
           lon={property?.KinhDo}
           lat={property?.ViDo}
           zoom={17}

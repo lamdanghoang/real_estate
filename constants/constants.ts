@@ -121,9 +121,9 @@ export const districts = [
   {
     name: "TP. Thủ Đức",
     MaDVHC: "DV0017",
-    lon: 106.7593,
-    lat: 10.8289,
-    zoom: 12,
+    lon: 106.8012,
+    lat: 10.8239,
+    zoom: 11,
   },
   {
     name: "Nhà Bè",
@@ -142,9 +142,9 @@ export const districts = [
   {
     name: "Bình Chánh",
     MaDVHC: "DV0020",
-    lon: 106.5763,
-    lat: 10.6889,
-    zoom: 12,
+    lon: 106.5955,
+    lat: 10.7342,
+    zoom: 11,
   },
   {
     name: "Củ Chi",
