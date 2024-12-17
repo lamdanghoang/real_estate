@@ -8,12 +8,14 @@ import Point from "@arcgis/core/geometry/Point";
 import Graphic from "@arcgis/core/Graphic";
 import { Boundary, Dagiac, RealEstate, SelectType } from "@/constants/types";
 import { colors, districts } from "@/constants/constants";
+import { useRouter } from "next/navigation";
 
 interface Props {
   lon?: number;
   lat?: number;
   zoom?: number;
   selection?: SelectType;
+  selectedProperty?: RealEstate;
 }
 
 const MultiGeometryMap: React.FC<Props> = ({
@@ -21,6 +23,7 @@ const MultiGeometryMap: React.FC<Props> = ({
   lat = 10.775908207858429,
   zoom = 10,
   selection,
+  selectedProperty,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<__esri.MapView | null>(null);
@@ -29,6 +32,12 @@ const MultiGeometryMap: React.FC<Props> = ({
   const [polygons, setPolygons] = useState<Boundary[]>([]);
   const [polyline, setPolyline] = useState<Boundary>();
   const [points, setPoints] = useState<RealEstate[]>([]);
+  const router = useRouter();
+  const [hoveredPointPopup, setHoveredPointPopup] = useState<{
+    x: number;
+    y: number;
+    point: RealEstate | null;
+  }>({ x: 0, y: 0, point: null });
 
   // Initialize map
   useEffect(() => {
@@ -57,6 +66,45 @@ const MultiGeometryMap: React.FC<Props> = ({
     // Store view and graphics layer
     setView(mapView);
     setGraphicsLayer(layer);
+
+    // Add pointer move event for hover
+    mapView.on("pointer-move", async (event) => {
+      try {
+        const hitResponse = await mapView.hitTest(event);
+        const graphic = hitResponse.results[0]?.graphic;
+
+        if (graphic && graphic.attributes.LoaiBDS) {
+          const point = graphic.attributes as RealEstate;
+          setHoveredPointPopup({
+            x: event.x,
+            y: event.y - 10,
+            point: point,
+          });
+        } else {
+          setHoveredPointPopup({ x: 0, y: 0, point: null });
+        }
+      } catch (error) {
+        console.error("Error during hit test:", error);
+      }
+    });
+
+    // Add click event for navigation
+    mapView.on("click", async (event) => {
+      try {
+        const hitResponse = await mapView.hitTest(event);
+        const graphic = hitResponse.results[0]?.graphic;
+
+        if (graphic && graphic.attributes.LoaiBDS) {
+          const point = graphic.attributes as RealEstate;
+          // Navigate to detail page using the point's ID or another unique identifier
+          router.push(`/info/${point.MaBDS}`);
+        }
+      } catch (error) {
+        console.error("Error during click event:", error);
+      }
+    });
+
+    mapView.popupEnabled = false;
 
     // Fetch locations
     fetchPolygons();
@@ -155,35 +203,35 @@ const MultiGeometryMap: React.FC<Props> = ({
             location.GiaThueTheoThang
           ),
         },
-        popupTemplate: {
-          title: "Thông tin bất động sản",
-          content: [
-            {
-              type: "text",
-              text: "Loại bất động sản: {LoaiBDS}",
-            },
-            {
-              type: "text",
-              text: "Địa chỉ: {DiaChi}",
-            },
-            {
-              type: "text",
-              text: "Diện tích: {DienTich}m²",
-            },
-            {
-              type: "text",
-              text: "Mô tả: {MoTa}",
-            },
-            {
-              type: "text",
-              text: "Giá thuê theo tháng: {GiaThueTheoThang}vnd",
-            },
-            {
-              type: "text",
-              text: "Trạng thái: {TrangThai}",
-            },
-          ],
-        },
+        // popupTemplate: {
+        //   title: "Thông tin bất động sản",
+        //   content: [
+        //     {
+        //       type: "text",
+        //       text: "Loại bất động sản: {LoaiBDS}",
+        //     },
+        //     {
+        //       type: "text",
+        //       text: "Địa chỉ: {DiaChi}",
+        //     },
+        //     {
+        //       type: "text",
+        //       text: "Diện tích: {DienTich}m²",
+        //     },
+        //     {
+        //       type: "text",
+        //       text: "Mô tả: {MoTa}",
+        //     },
+        //     {
+        //       type: "text",
+        //       text: "Giá thuê theo tháng: {GiaThueTheoThang}vnd",
+        //     },
+        //     {
+        //       type: "text",
+        //       text: "Trạng thái: {TrangThai}",
+        //     },
+        //   ],
+        // },
       });
 
       graphicsLayer.add(pointGraphic);
@@ -407,7 +455,44 @@ const MultiGeometryMap: React.FC<Props> = ({
     }
   }, [graphicsLayer, points, polyline]);
 
-  return <div ref={mapRef} style={{ height: "500px", width: "100%" }} />;
+  return (
+    <div style={{ position: "relative", height: "500px", width: "100%" }}>
+      <div ref={mapRef} style={{ height: "100%", width: "100%" }} />
+
+      {/* Hover Popup */}
+      {hoveredPointPopup.point && (
+        <div
+          style={{
+            position: "absolute",
+            top: `${hoveredPointPopup.y}px`,
+            left: `${hoveredPointPopup.x}px`,
+            transform: "translate(-50%, -100%)",
+            backgroundColor: "white",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            padding: "12px",
+            boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+            zIndex: 1000,
+            maxWidth: "250px",
+            fontSize: "12px",
+            textAlign: "justify",
+          }}
+        >
+          <h4 className="text-sm font-semibold">
+            {hoveredPointPopup.point.LoaiBDS}
+          </h4>
+          <p className="my-2">Địa chỉ: {hoveredPointPopup.point.DiaChi}</p>
+          <p className="my-2">
+            Diện tích: {hoveredPointPopup.point.DienTich}m²
+          </p>
+          <p className="my-2">Mô tả: {hoveredPointPopup.point.MoTa}</p>
+          <p className="mt-2">
+            Giá thuê: {hoveredPointPopup.point.GiaThueTheoThang} VNĐ/tháng
+          </p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default MultiGeometryMap;

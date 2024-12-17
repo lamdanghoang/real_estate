@@ -133,6 +133,7 @@ export default function Info() {
           lon={property?.KinhDo}
           lat={property?.ViDo}
           zoom={17}
+          selectedProperty={property}
         />
       </div>
     </div>
