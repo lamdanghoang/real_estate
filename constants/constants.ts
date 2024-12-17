@@ -164,14 +164,20 @@ export const districts = [
 
 export const types = ["Tất cả", "Nhà ở", "Kho xưởng"];
 
-export const areas = ["Tất cả", "Dưới 100m2", "100m2", "120m2", "140m2"];
+export const areas = [
+  "Tất cả",
+  "Dưới 100 m²",
+  "100 m² - 150 m²",
+  "150 m² - 200 m²",
+  "Trên 200 m²",
+];
 
 export const prices = [
   "Tất cả",
   "Dưới 10tr",
   "10tr - 20tr",
   "20tr - 30tr",
-  "30tr - 40tr",
+  "Trên 30tr",
 ];
 
 export const tab_list = [
