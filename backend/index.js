@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "tranhoainam",
   database: "QuanLyBatDongSan",
   waitForConnections: true,
   connectionLimit: 10,
@@ -50,7 +50,7 @@ app.post("/nguoiquanly/them", async (req, res) => {
       VaiTro,
       TrangThai,
     } = req.body;
-
+    console.log("Request body:", req.body);
     const formattedNgayKhoiTao = formatDate(NgayKhoiTao);
 
     const [result] = await pool.execute(
@@ -205,6 +205,96 @@ app.get("/batdongsan/thongtin/:id", async (req, res) => {
 
 app.get("/khachthue/danhsach", async (req, res) => {
   await handleQuery(res, "SELECT * FROM KhachThue");
+});
+
+app.post("/khachthue/them", async (req, res) => {
+  try {
+    const {
+      TenKhachThue,
+      SoCCCD,
+      SoDienThoai,
+      Email,
+    } = req.body;
+    // console.log("Request body:", req.body);
+
+    const [result] = await pool.execute(
+      "INSERT INTO KhachThue (TenKhachThue, SoCCCD, SoDienThoai, Email) VALUES (?, ?, ?, ?)",
+      [
+        TenKhachThue,
+        SoCCCD,
+        SoDienThoai,
+        Email,
+      ]
+    );
+
+    res.status(200).json({
+      message: "Khách thuê đã được thêm thành công!",
+      userId: result.insertId,
+    });
+  } catch (error) {
+    console.error("Error adding khách thuê:", error);
+    res.status(400).json({
+      message: error.message || "Có lỗi xảy ra khi thêm khách thuê.",
+    });
+  }
+});
+
+app.put("/khachthue/sua/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      TenKhachThue,
+      SoCCCD,
+      SoDienThoai,
+      Email,
+    } = req.body;
+    const [result] = await pool.execute(
+      `UPDATE KhachThue 
+       SET TenKhachThue = ?, SoCCCD = ?, SoDienThoai = ?, Email = ?
+       WHERE MaKhachThue = ?`,
+      [
+        TenKhachThue,
+        SoCCCD,
+        SoDienThoai,
+        Email,
+      ]
+    );
+
+    if (result.affectedRows > 0) {
+      res
+        .status(200)
+        .json({ message: "Khách thuê đã được cập nhật thành công!" });
+    } else {
+      res.status(404).json({ message: "Khách thuê không tồn tại." });
+    }
+  } catch (error) {
+    console.error("Error updating khách thuê:", error);
+    res
+      .status(500)
+      .json({ message: "Có lỗi xảy ra khi cập nhật khách thuê." });
+  }
+});
+
+app.delete("/khachthue/xoa/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [result] = await pool.execute(
+      "DELETE FROM KhachThue WHERE MaKhachThue = ?",
+      [id]
+    );
+
+    if (result.affectedRows > 0) {
+      res
+        .status(200)
+        .json({ message: "Khách thuê đã được xóa thành công!" });
+    } else {
+      res.status(404).json({ message: "Khách thuê không tồn tại." });
+    }
+  } catch (error) {
+    console.error("Error deleting khách thuê:", error);
+    res.status(500).json({ message: "Có lỗi xảy ra khi xóa khách thuê." });
+  }
 });
 
 app.get("/hopdong/danhsach", async (req, res) => {

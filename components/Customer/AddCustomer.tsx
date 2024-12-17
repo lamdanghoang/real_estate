@@ -53,10 +53,12 @@ export function AddCustomerDialog({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
-    toast.success("Khách thuê mới đã được thêm thành công!");
+    // toast.success("Khách thuê mới đã được thêm thành công!");
     console.log(data);
+    postData(data);
     onOpenChange(false);
   };
+  console.log("Sending data:", postData);
 
   const handleReset = () => {
     form.reset(undefined, { keepValues: false });
@@ -176,3 +178,21 @@ export function AddCustomerDialog({
     </Dialog>
   );
 }
+
+const postData = async (formData: z.infer<typeof FormSchema>) => {
+  try {
+    const response = await fetch("http://localhost:3003/khachthue/them", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      console.log("Khách thuê đã được thêm thành công");
+      toast.success("Khách thuê mới đã được thêm thành công!");
+    }
+  } catch (error) {
+    console.error("Error", error);
+  }
+};
