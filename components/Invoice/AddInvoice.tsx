@@ -81,8 +81,9 @@ export function AddContractDialog({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
-    toast.success("Hóa đơn mới đã được thêm thành công!");
+    // toast.success("Hóa đơn mới đã được thêm thành công!");
     console.log(data);
+    postData(data);
     onOpenChange(false);
   };
 
@@ -278,3 +279,21 @@ export function AddContractDialog({
     </Dialog>
   );
 }
+
+const postData = async (formData: z.infer<typeof FormSchema>) => {
+  try {
+    const response = await fetch("http://localhost:3003/hoadon/them", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      console.log("Hóa đơn thanh toán đã được thêm thành công");
+      toast.success("Hóa đơn mới đã được thêm thành công!");
+    }
+  } catch (error) {
+    console.error("Error", error);
+  }
+};
