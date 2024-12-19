@@ -79,7 +79,7 @@ export function AddManagerDialog({
       TenDangNhap: "",
       MatKhau: "",
       VaiTro: "",
-      TrangThai: "",
+      TrangThai: "Hoạt động",
     },
   });
 
@@ -245,9 +245,10 @@ export function AddManagerDialog({
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="Hoạt động">Hoạt động</SelectItem>
-                      <SelectItem value="Không hoạt động">
-                        Không hoạt động
+                      <SelectItem value="Ngừng hoạt động">
+                        Ngừng hoạt động
                       </SelectItem>
+                      <SelectItem value="Bị khóa">Bị khóa</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -297,7 +298,6 @@ const postData = async (formData: z.infer<typeof FormSchema>) => {
       },
     });
     if (response.ok) {
-      console.log("Người quản lý đã được thêm thành công");
       toast.success("Người quản lý mới đã được thêm thành công!");
     }
   } catch (error) {

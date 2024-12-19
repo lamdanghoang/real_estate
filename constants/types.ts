@@ -101,3 +101,12 @@ export interface SelectType {
   DienTich: string;
   GiaThueTheoThang: string;
 }
+
+export interface Revenue {
+  Nam: string;
+  TenDVHC: string;
+  LoaiBDS: string;
+  SoLuongBDS: string;
+  SoLuongHopDong: string;
+  TongDoanhThu: string;
+}

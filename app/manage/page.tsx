@@ -8,6 +8,7 @@ import ManagerTable from "@/components/Manager/ManagerTable";
 import CustomerTable from "@/components/Customer/CustomerTable";
 import ContractTable from "@/components/Contract/ContractTable";
 import InvoiceTable from "@/components/Invoice/InvoiceTable";
+import RevenueTable from "@/components/Revenue/RevenueTable";
 
 export default function Manage() {
   const { isConnected, isOwner } = useContext(GlobalContext);
@@ -60,9 +61,7 @@ export default function Manage() {
             <InvoiceTable />
           </TabsContent>
           <TabsContent value="baocao">
-            <div className="p-4 bg-white rounded-lg shadow">
-              Báo Cáo Content
-            </div>
+            <RevenueTable />
           </TabsContent>
           <TabsContent value="nguoiquanly">
             <ManagerTable />

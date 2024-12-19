@@ -61,7 +61,15 @@ export default function ContractTable() {
   };
 
   const clickHandler = (contract: Contract) => {
-    setSelectedContract(contract);
+    setSelectedContract((prev) => {
+      return {
+        ...prev,
+        ...contract,
+        NgayBatDau: format(new Date(contract.NgayBatDau), "dd/MM/yyyy"),
+        NgayKetThuc: format(new Date(contract.NgayKetThuc), "dd/MM/yyyy"),
+        NgayKyHopDong: format(new Date(contract.NgayKyHopDong), "dd/MM/yyyy"),
+      };
+    });
   };
 
   const updateClickHandler = () => {
@@ -85,7 +93,9 @@ export default function ContractTable() {
   const deleteConfirmHandler = () => {
     // Handle the delete operation here
     console.log("Deleting contract:", selectedContract?.MaHopDong);
-    toast.success("Xóa thành công!");
+    if (selectedContract) {
+      deleteData(selectedContract.MaHopDong);
+    }
     setSelectedContract(undefined);
   };
 
@@ -150,6 +160,8 @@ export default function ContractTable() {
                     className={`${
                       item.TinhTrangHopDong === "Hiệu lực"
                         ? "bg-green-100 text-green-800"
+                        : item.TinhTrangHopDong === "Hủy bỏ"
+                        ? "bg-gray-600 text-gray-200"
                         : "bg-red-100 text-red-800"
                     }`}
                   >
@@ -214,3 +226,20 @@ export default function ContractTable() {
     </div>
   );
 }
+
+const deleteData = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3003/hopdong/xoa/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      console.log("Xóa thành công!");
+      toast.success("Xóa thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

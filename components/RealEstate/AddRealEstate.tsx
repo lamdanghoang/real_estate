@@ -29,7 +29,6 @@ import {
 import { District, StaffManager } from "@/constants/types";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 const FormSchema = z.object({
   LoaiBDS: z.string().min(2, {
@@ -122,7 +121,7 @@ export function AddPropertyDialog({
       DiaChi: "",
       DienTich: "",
       GiaThueTheoThang: "",
-      TrangThai: "",
+      TrangThai: "Chưa cho thuê",
       MoTa: "",
       MaNQL: "",
       MaDVHC: "",
@@ -134,7 +133,7 @@ export function AddPropertyDialog({
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
     console.log(data);
-    toast.success("Bất động sản mới đã được thêm thành công!");
+    postData(data);
     onOpenChange(false);
   };
 
@@ -210,7 +209,9 @@ export function AddPropertyDialog({
               name="DienTich"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Diện tích</FormLabel>
+                  <FormLabel>
+                    Diện tích (m²) <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -224,7 +225,9 @@ export function AddPropertyDialog({
               name="GiaThueTheoThang"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Giá thuê (VNĐ)</FormLabel>
+                  <FormLabel>
+                    Giá thuê (VNĐ) <span className="text-red-500">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -253,6 +256,9 @@ export function AddPropertyDialog({
                       </SelectItem>
                       <SelectItem value="Đang cho thuê">
                         Đang cho thuê
+                      </SelectItem>
+                      <SelectItem value="Không hoạt động">
+                        Không hoạt động
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -392,3 +398,19 @@ export function AddPropertyDialog({
     </Dialog>
   );
 }
+const postData = async (formData: z.infer<typeof FormSchema>) => {
+  try {
+    const response = await fetch("http://localhost:3003/batdongsan/them", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      toast.success("Bất động sản mới đã được thêm thành công!");
+    }
+  } catch (error) {
+    console.error("Error", error);
+  }
+};

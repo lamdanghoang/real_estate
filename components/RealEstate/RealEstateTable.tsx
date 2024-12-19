@@ -133,7 +133,9 @@ export default function RealEstateTable() {
   const deleteConfirmHandler = () => {
     // Handle the delete operation here
     console.log("Deleting property:", selectedProperty?.MaBDS);
-    toast.success("Xóa thành công!");
+    if (selectedProperty?.MaBDS) {
+      deleteData(selectedProperty.MaBDS);
+    }
     setSelectedProperty(undefined);
   };
 
@@ -156,7 +158,7 @@ export default function RealEstateTable() {
               <TableHead className="min-w-[100px]">Diện tích</TableHead>
               <TableHead className="min-w-[120px]">Giá thuê (VNĐ)</TableHead>
               <TableHead className="min-w-[300px]">Mô tả</TableHead>
-              <TableHead className="min-w-[150px]">Trạng thái</TableHead>
+              <TableHead className="min-w-[180px]">Trạng thái</TableHead>
               <TableHead className="min-w-[150px]">Nguời quản lý</TableHead>
             </TableRow>
           </TableHeader>
@@ -183,6 +185,8 @@ export default function RealEstateTable() {
                     className={`${
                       item.TrangThai === "Chưa cho thuê"
                         ? "bg-green-100 text-green-800"
+                        : item.TrangThai === "Không hoạt động"
+                        ? "bg-gray-600 text-gray-200"
                         : "bg-red-100 text-red-800"
                     } text-center`}
                   >
@@ -250,3 +254,20 @@ export default function RealEstateTable() {
     </div>
   );
 }
+
+const deleteData = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3003/batdongsan/xoa/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      console.log("Xóa thành công!");
+      toast.success("Xóa thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

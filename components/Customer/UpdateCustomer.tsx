@@ -34,15 +34,16 @@ export function UpdateCustomerDialog({
 
   useEffect(() => {
     if (customerData) {
-      setFormData(customerData);
+      setFormData((prev) => {
+        return { ...prev, ...customerData };
+      });
     }
   }, [customerData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
-    toast.success("Thông tin khách thuê đã được cập nhật thành công!");
-    console.log(formData);
+    updateData(formData);
     onOpenChange(false);
   };
 
@@ -130,3 +131,32 @@ export function UpdateCustomerDialog({
     </Dialog>
   );
 }
+
+const updateData = async (formData: {
+  MaKhachThue: string;
+  TenKhachThue: string;
+  SoCCCD: string;
+  SoDienThoai: string;
+  Email: string;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3003/khachthue/sua/${formData.MaKhachThue}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (response.ok) {
+      toast.success("Thông tin khách thuê đã được cập nhật thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

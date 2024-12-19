@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const FormSchema = z.object({
   TenKhachThue: z.string().min(1, "Vui lòng nhập tên khách thuê."),
@@ -53,7 +54,6 @@ export function AddCustomerDialog({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
-    // toast.success("Khách thuê mới đã được thêm thành công!");
     console.log(data);
     postData(data);
     onOpenChange(false);
@@ -63,6 +63,12 @@ export function AddCustomerDialog({
   const handleReset = () => {
     form.reset(undefined, { keepValues: false });
   };
+
+  useEffect(() => {
+    if (!open) {
+      form.reset();
+    }
+  }, [open, form]);
 
   return (
     <Dialog
@@ -189,7 +195,6 @@ const postData = async (formData: z.infer<typeof FormSchema>) => {
       },
     });
     if (response.ok) {
-      console.log("Khách thuê đã được thêm thành công");
       toast.success("Khách thuê mới đã được thêm thành công!");
     }
   } catch (error) {

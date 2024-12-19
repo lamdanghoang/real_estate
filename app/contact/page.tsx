@@ -1,5 +1,6 @@
 import { Facebook, Mail, Printer } from "lucide-react";
 import MultiGeometryMap from "@/components/Map/FinalMap";
+import SingleMap from "@/components/Map/SingleMap";
 
 export default function Contact() {
   return (
@@ -34,9 +35,31 @@ export default function Contact() {
           </div>
         </div>
         <div className="w-1/2">
-          <MultiGeometryMap lon={106.63036} lat={10.77549} zoom={17} />
+          <SingleMap
+            lon={106.63036}
+            lat={10.77549}
+            zoom={17}
+            selectedProperty={initialValue}
+          />
         </div>
       </div>
     </div>
   );
 }
+
+const initialValue = {
+  MaBDS: "BDS001",
+  LoaiBDS: "Nhà ở",
+  DiaChi: "61 Dương Khuê, Phường Hiệp Tân, Quận Tân Phú, TP. Hồ Chí Minh",
+  DienTich: 75.46,
+  GiaThueTheoThang: 18000000,
+  TrangThai: "Đang cho thuê",
+  MoTa: "Nhà phố 3 tầng, nhiều phòng ngủ cho gia đình có nhiều thành viên",
+  MaNQL: "NQL001",
+  MaDiem: "IDP001",
+  MaDVHC: "DV0015",
+  HoTen: "Huỳnh Văn A",
+  TenDVHC: "Quận Tân Phú",
+  KinhDo: 106.63036,
+  ViDo: 10.77549,
+};

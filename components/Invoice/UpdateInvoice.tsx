@@ -46,15 +46,16 @@ export function UpdateInvoiceDialog({
 
   useEffect(() => {
     if (invoiceData) {
-      setFormData(invoiceData);
+      setFormData((prev) => {
+        return { ...prev, ...invoiceData };
+      });
     }
   }, [invoiceData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
-    toast.success("Thông tin hóa đơn đã được cập nhật thành công!");
-    console.log(formData);
+    updateData(formData);
     onOpenChange(false);
   };
 
@@ -135,11 +136,14 @@ export function UpdateInvoiceDialog({
                 <SelectValue placeholder={formData.TrangThaiThanhToan} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem key="0" value="Đã thanh toán">
+                <SelectItem key={0} value="Đã thanh toán">
                   Đã thanh toán
                 </SelectItem>
-                <SelectItem key="1" value="Chưa thanh toán">
+                <SelectItem key={1} value="Chưa thanh toán">
                   Chưa thanh toán
+                </SelectItem>
+                <SelectItem key={2} value="Quá hạn">
+                  Quá hạn
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -204,3 +208,35 @@ export function UpdateInvoiceDialog({
     </Dialog>
   );
 }
+
+const updateData = async (formData: {
+  MaHoaDon: string;
+  NgayLapHoaDon: string;
+  NgayHetHan: string;
+  SoTien: number;
+  NgayThanhToanThucTe: string;
+  TrangThaiThanhToan: string;
+  PhuongThucThanhToan: string;
+  MaHopDong: string;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3003/hoadon/sua/${formData.MaHoaDon}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (response.ok) {
+      toast.success("Thông tin hóa đơn đã được cập nhật thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

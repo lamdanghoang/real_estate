@@ -86,7 +86,9 @@ export default function CustomerTable() {
   const deleteConfirmHandler = () => {
     // Handle the delete operation here
     console.log("Deleting property:", selectedCustomer?.MaKhachThue);
-    toast.success("Xóa thành công!");
+    if (selectedCustomer) {
+      deleteData(selectedCustomer.MaKhachThue);
+    }
     setSelectedCustomer(undefined);
   };
 
@@ -184,3 +186,20 @@ export default function CustomerTable() {
     </div>
   );
 }
+
+const deleteData = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3003/khachthue/xoa/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      console.log("Xóa thành công!");
+      toast.success("Xóa thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

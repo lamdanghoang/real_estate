@@ -85,7 +85,7 @@ export function AddContractDialog({
       GiaThue: "",
       TienDatCoc: "",
       SoLuongKhach: 0,
-      TinhTrangHopDong: "",
+      TinhTrangHopDong: "Hiệu lực",
       MaBDS: "",
       MaKhachThue: "",
     },
@@ -98,8 +98,8 @@ export function AddContractDialog({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
-    toast.success("Hợp đồng mới đã được thêm thành công!");
     console.log(data);
+    postData(data);
     onOpenChange(false);
   };
 
@@ -155,6 +155,12 @@ export function AddContractDialog({
     fetchCustomers();
     fetchProperties();
   });
+
+  useEffect(() => {
+    if (!open) {
+      form.reset();
+    }
+  }, [open, form]);
 
   return (
     <Dialog
@@ -287,8 +293,15 @@ export function AddContractDialog({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Hiệu lực">Hiệu lực</SelectItem>
-                      <SelectItem value="Hết hạn">Hết hạn</SelectItem>
+                      <SelectItem key={0} value="Hiệu lực">
+                        Hiệu lực
+                      </SelectItem>
+                      <SelectItem key={1} value="Hết hạn">
+                        Hết hạn
+                      </SelectItem>
+                      <SelectItem key={2} value="Hủy bỏ">
+                        Hủy bỏ
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -384,3 +397,20 @@ export function AddContractDialog({
     </Dialog>
   );
 }
+
+const postData = async (formData: z.infer<typeof FormSchema>) => {
+  try {
+    const response = await fetch("http://localhost:3003/hopdong/them", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      toast.success("Hợp đồng mới đã được thêm thành công!");
+    }
+  } catch (error) {
+    console.error("Error", error);
+  }
+};

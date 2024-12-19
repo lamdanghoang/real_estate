@@ -81,7 +81,18 @@ export default function ContractTable() {
   };
 
   const clickHandler = (inv: Invoice) => {
-    setSelectedInvoice(inv);
+    setSelectedInvoice((prev) => {
+      return {
+        ...prev,
+        ...inv,
+        NgayLapHoaDon: format(new Date(inv.NgayLapHoaDon), "dd/MM/yyyy"),
+        NgayHetHan: format(new Date(inv.NgayHetHan), "dd/MM/yyyy"),
+        NgayThanhToanThucTe: format(
+          new Date(inv.NgayThanhToanThucTe),
+          "dd/MM/yyyy"
+        ),
+      };
+    });
   };
 
   const updateClickHandler = () => {
@@ -105,7 +116,9 @@ export default function ContractTable() {
   const deleteConfirmHandler = () => {
     // Handle the delete operation here
     console.log("Deleting invoice:", selectedInvoice?.MaHoaDon);
-    toast.success("Xóa thành công!");
+    if (selectedInvoice) {
+      deleteData(selectedInvoice.MaHoaDon);
+    }
     setSelectedInvoice(undefined);
   };
 
@@ -168,6 +181,8 @@ export default function ContractTable() {
                     className={`${
                       item.TrangThaiThanhToan === "Đã thanh toán"
                         ? "bg-green-100 text-green-800"
+                        : item.TrangThaiThanhToan === "Quá hạn"
+                        ? "bg-gray-600 text-gray-200"
                         : "bg-red-100 text-red-800"
                     }`}
                   >
@@ -234,3 +249,20 @@ export default function ContractTable() {
     </div>
   );
 }
+
+const deleteData = async (id: string) => {
+  try {
+    const response = await fetch(`http://localhost:3003/hoadon/xoa/${id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      console.log("Xóa thành công!");
+      toast.success("Xóa thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

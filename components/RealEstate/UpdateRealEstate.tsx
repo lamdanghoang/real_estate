@@ -35,7 +35,8 @@ export function UpdatePropertyDialog({
   districts,
   staffs,
 }: UpdatePropertyDialogProps) {
-  const [formData, setFormData] = useState<RealEstate>({
+  const [formData, setFormData] = useState({
+    MaBDS: "",
     LoaiBDS: "",
     DiaChi: "",
     DienTich: 0,
@@ -54,7 +55,7 @@ export function UpdatePropertyDialog({
   useEffect(() => {
     if (propertyData) {
       setFormData((prev) => {
-        return { ...propertyData };
+        return { ...prev, ...propertyData };
       });
     }
   }, [propertyData]);
@@ -62,8 +63,7 @@ export function UpdatePropertyDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
-    toast.success("Thông tin bất động sản đã được cập nhật thành công!");
-    console.log(formData);
+    updateData(formData);
     onOpenChange(false);
   };
 
@@ -114,7 +114,7 @@ export function UpdatePropertyDialog({
 
           <div className="grid gap-2">
             <Label htmlFor="area">
-              Diện tích <span className="text-red-500">*</span>
+              Diện tích (m²) <span className="text-red-500">*</span>
             </Label>
             <Input
               id="area"
@@ -126,7 +126,9 @@ export function UpdatePropertyDialog({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="price">Giá thuê (VNĐ)</Label>
+            <Label htmlFor="price">
+              Giá thuê (VNĐ) <span className="text-red-500">*</span>
+            </Label>
             <Input
               id="price"
               value={formData.GiaThueTheoThang}
@@ -150,8 +152,9 @@ export function UpdatePropertyDialog({
                 <SelectValue placeholder={formData.TrangThai} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Đã cho thuê">Đã cho thuê</SelectItem>
                 <SelectItem value="Chưa cho thuê">Chưa cho thuê</SelectItem>
+                <SelectItem value="Đang cho thuê">Đang cho thuê</SelectItem>
+                <SelectItem value="Không hoạt động">Không hoạt động</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -166,28 +169,6 @@ export function UpdatePropertyDialog({
               }
             />
           </div>
-
-          {/* <div className="grid gap-2">
-            <Label htmlFor="location">
-              Vĩ độ <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="location"
-              value={formData.x}
-              onChange={(e) => setFormData({ ...formData, x: +e.target.value })}
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="size">
-              Kinh độ <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="size"
-              value={formData.y}
-              onChange={(e) => setFormData({ ...formData, y: +e.target.value })}
-            />
-          </div> */}
 
           <div className="grid gap-2">
             <Label htmlFor="district">
@@ -257,3 +238,41 @@ export function UpdatePropertyDialog({
     </Dialog>
   );
 }
+
+const updateData = async (formData: {
+  MaBDS: string;
+  LoaiBDS: string;
+  DiaChi: string;
+  DienTich: number;
+  GiaThueTheoThang: number;
+  TrangThai: string;
+  MoTa: string;
+  MaNQL: string;
+  MaDiem: string;
+  MaDVHC: string;
+  HoTen: string;
+  TenDVHC: string;
+  KinhDo: number;
+  ViDo: number;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3003/batdongsan/sua/${formData.MaBDS}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (response.ok) {
+      toast.success("Thông tin bất động sản đã được cập nhật thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

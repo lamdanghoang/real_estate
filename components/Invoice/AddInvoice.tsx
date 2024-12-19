@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/form";
 import { Contract } from "@/constants/types";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const FormSchema = z.object({
   NgayLapHoaDon: z.string().min(1, "Vui lòng nhập ngày lập hóa đơn."),
@@ -70,7 +71,7 @@ export function AddContractDialog({
       NgayHetHan: "",
       SoTien: "",
       NgayThanhToanThucTe: "",
-      TrangThaiThanhToan: "",
+      TrangThaiThanhToan: "Chưa thanh toán",
       PhuongThucThanhToan: "",
       MaHopDong: "",
     },
@@ -81,14 +82,20 @@ export function AddContractDialog({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Handle form submission
-    toast.success("Hóa đơn mới đã được thêm thành công!");
     console.log(data);
+    postData(data);
     onOpenChange(false);
   };
 
   const handleReset = () => {
     form.reset(undefined, { keepValues: false });
   };
+
+  useEffect(() => {
+    if (!open) {
+      form.reset();
+    }
+  }, [open, form]);
 
   return (
     <Dialog
@@ -197,6 +204,7 @@ export function AddContractDialog({
                       <SelectItem value="Chưa thanh toán">
                         Chưa thanh toán
                       </SelectItem>
+                      <SelectItem value="Quá hạn">Quá hạn</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -278,3 +286,19 @@ export function AddContractDialog({
     </Dialog>
   );
 }
+const postData = async (formData: z.infer<typeof FormSchema>) => {
+  try {
+    const response = await fetch("http://localhost:3003/hoadon/them", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      toast.success("Hóa đơn mới đã được thêm thành công!");
+    }
+  } catch (error) {
+    console.error("Error", error);
+  }
+};

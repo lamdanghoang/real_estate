@@ -203,35 +203,6 @@ const MultiGeometryMap: React.FC<Props> = ({
             location.GiaThueTheoThang
           ),
         },
-        // popupTemplate: {
-        //   title: "Thông tin bất động sản",
-        //   content: [
-        //     {
-        //       type: "text",
-        //       text: "Loại bất động sản: {LoaiBDS}",
-        //     },
-        //     {
-        //       type: "text",
-        //       text: "Địa chỉ: {DiaChi}",
-        //     },
-        //     {
-        //       type: "text",
-        //       text: "Diện tích: {DienTich}m²",
-        //     },
-        //     {
-        //       type: "text",
-        //       text: "Mô tả: {MoTa}",
-        //     },
-        //     {
-        //       type: "text",
-        //       text: "Giá thuê theo tháng: {GiaThueTheoThang}vnd",
-        //     },
-        //     {
-        //       type: "text",
-        //       text: "Trạng thái: {TrangThai}",
-        //     },
-        //   ],
-        // },
       });
 
       graphicsLayer.add(pointGraphic);
@@ -308,34 +279,34 @@ const MultiGeometryMap: React.FC<Props> = ({
     graphicsLayer.removeAll();
 
     // Create graphics for each location
-    polygons.forEach((location, index) => {
-      // Create symbol
-      const symbol = {
-        type: "simple-fill",
-        color: colors[index],
-        outline: {
-          color: [255, 255, 255],
-          width: 1,
-        },
-      };
+    // polygons.forEach((location, index) => {
+    //   // Create symbol
+    //   const symbol = {
+    //     type: "simple-fill",
+    //     color: colors[index],
+    //     outline: {
+    //       color: [255, 255, 255],
+    //       width: 1,
+    //     },
+    //   };
 
-      // Create polygon graphic
-      const polygonGraphic = new Graphic({
-        geometry: {
-          type: "polygon",
-          rings: location.polygon.rings,
-        },
-        symbol: symbol,
-        attributes: {
-          name: location.TenDVHC,
-        },
-        popupTemplate: {
-          title: "{name}",
-        },
-      });
+    //   // Create polygon graphic
+    //   const polygonGraphic = new Graphic({
+    //     geometry: {
+    //       type: "polygon",
+    //       rings: location.polygon.rings,
+    //     },
+    //     symbol: symbol,
+    //     attributes: {
+    //       name: location.TenDVHC,
+    //     },
+    //     popupTemplate: {
+    //       title: "{name}",
+    //     },
+    //   });
 
-      graphicsLayer.add(polygonGraphic);
-    });
+    //   graphicsLayer.add(polygonGraphic);
+    // });
 
     // Create graphics for each location
     points.forEach((location) => {
@@ -403,8 +374,8 @@ const MultiGeometryMap: React.FC<Props> = ({
       width: 2,
     };
 
-    // Create polygon graphic
-    const polygonGraphic = new Graphic({
+    // Create polyline graphic
+    const polylineGraphic = new Graphic({
       geometry: {
         type: "polyline",
         paths: polyline.polygon.rings,
@@ -418,7 +389,7 @@ const MultiGeometryMap: React.FC<Props> = ({
       },
     });
 
-    graphicsLayer.add(polygonGraphic);
+    graphicsLayer.add(polylineGraphic);
   };
 
   // Render graphics when locations change

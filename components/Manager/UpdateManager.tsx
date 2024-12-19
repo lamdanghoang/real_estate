@@ -45,7 +45,9 @@ export function UpdateManagerDialog({
 
   useEffect(() => {
     if (staffData) {
-      setFormData(staffData);
+      setFormData((prev) => {
+        return { ...prev, ...staffData };
+      });
     }
   }, [staffData]);
 
@@ -181,7 +183,8 @@ export function UpdateManagerDialog({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Hoạt động">Hoạt động</SelectItem>
-                <SelectItem value="Không hoạt động">Không hoạt động</SelectItem>
+                <SelectItem value="Ngừng hoạt động">Ngừng hoạt động</SelectItem>
+                <SelectItem value="Bị khóa">Bị khóa</SelectItem>
               </SelectContent>
             </Select>
           </div>

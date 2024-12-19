@@ -46,15 +46,16 @@ export function UpdateContractDialog({
 
   useEffect(() => {
     if (contractData) {
-      setFormData(contractData);
+      setFormData((prev) => {
+        return { ...prev, ...contractData };
+      });
     }
   }, [contractData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
-    toast.success("Thông tin hợp đồng đã được cập nhật thành công!");
-    console.log(formData);
+    updateData(formData);
     onOpenChange(false);
   };
 
@@ -156,11 +157,14 @@ export function UpdateContractDialog({
                 <SelectValue placeholder={formData.TinhTrangHopDong} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem key="0" value="Hiệu lực">
+                <SelectItem key={0} value="Hiệu lực">
                   Hiệu lực
                 </SelectItem>
-                <SelectItem key="1" value="Hết hạn">
+                <SelectItem key={1} value="Hết hạn">
                   Hết hạn
+                </SelectItem>
+                <SelectItem key={2} value="Hủy bỏ">
+                  Hủy bỏ
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -188,3 +192,37 @@ export function UpdateContractDialog({
     </Dialog>
   );
 }
+
+const updateData = async (formData: {
+  MaHopDong: string;
+  NgayKyHopDong: string;
+  NgayBatDau: string;
+  NgayKetThuc: string;
+  GiaThue: number;
+  TienDatCoc: number;
+  SoLuongKhach: number;
+  TinhTrangHopDong: string;
+  MaBDS: string;
+  MaKhachThue: string;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3003/hopdong/sua/${formData.MaHopDong}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    if (response.ok) {
+      toast.success("Thông tin hợp đồng đã được cập nhật thành công!");
+    } else {
+      console.error("Error:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

@@ -15,6 +15,7 @@ import { DeleteManagerDialog } from "./DeleteManager";
 import { StaffManager } from "@/constants/types";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
+import { Badge } from "../ui/badge";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -139,7 +140,20 @@ export default function ManagerTable() {
                 <TableCell>{item.TenDangNhap}</TableCell>
                 <TableCell>{item.MatKhau}</TableCell>
                 <TableCell>{item.VaiTro}</TableCell>
-                <TableCell>{item.TrangThai}</TableCell>
+                <TableCell>
+                  <Badge
+                    variant="secondary"
+                    className={`${
+                      item.TrangThai === "Hoạt động"
+                        ? "bg-green-100 text-green-800"
+                        : item.TrangThai === "Ngừng hoạt động"
+                        ? "bg-gray-600 text-gray-200"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {item.TrangThai}
+                  </Badge>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
