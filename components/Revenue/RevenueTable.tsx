@@ -80,7 +80,9 @@ export default function RevenueTable() {
                 <TableCell>{item.LoaiBDS}</TableCell>
                 <TableCell>{item.SoLuongBDS}</TableCell>
                 <TableCell>{item.SoLuongHopDong}</TableCell>
-                <TableCell>{item.TongDoanhThu}</TableCell>
+                <TableCell>
+                  {new Intl.NumberFormat("vi-VN").format(+item.TongDoanhThu)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
