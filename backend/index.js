@@ -35,7 +35,31 @@ app.get("/", (req, res) => {
 });
 
 app.get("/doanhthu", async (req, res) => {
-  // await handleQuery(res, "");
+  await handleQuery(
+    res,
+    `
+    SELECT 
+    YEAR(hdt.NgayKyHopDong) as Nam,
+    dvhc.TenDVHC,
+    bds.LoaiBDS,
+    COUNT(DISTINCT bds.MaBDS) as 'SoLuongBDS',
+    COUNT(DISTINCT hdt.MaHopDong) as 'SoLuongHopDong',
+    SUM(hdt.GiaThue) as 'TongDoanhThu'
+FROM 
+    BatDongSan bds
+    JOIN DonViHanhChinh dvhc ON bds.MaDVHC = dvhc.MaDVHC COLLATE utf8mb4_unicode_ci
+    LEFT JOIN HopDongThue hdt ON bds.MaBDS = hdt.MaBDS COLLATE utf8mb4_unicode_ci
+GROUP BY 
+    YEAR(hdt.NgayKyHopDong),
+    dvhc.TenDVHC,
+    bds.LoaiBDS
+HAVING 
+    SUM(hdt.GiaThue) > 0
+ORDER BY 
+    Nam DESC,
+    dvhc.TenDVHC ASC;
+    `
+  );
 });
 
 app.get("/dagiac/danhsach", async (req, res) => {

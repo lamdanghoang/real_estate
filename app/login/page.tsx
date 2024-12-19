@@ -74,7 +74,7 @@ export default function Login() {
         router.push("/manage");
         setIsConnected(true);
         role.VaiTro === "Chủ sở hữu" && setIsOwner(true);
-      }, 1000);
+      }, 500);
     } else {
       toast.error("Sai thông tin đăng nhập. Vui lòng thử lại!");
     }

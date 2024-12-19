@@ -66,7 +66,9 @@ export default function RevenueTable() {
               <TableHead className="min-w-[150px]">Loại bất động sản</TableHead>
               <TableHead className="min-w-[150px]">Số lượng BĐS</TableHead>
               <TableHead className="min-w-[150px]">Số lượng hợp đồng</TableHead>
-              <TableHead className="min-w-[200px]">Tổng doanh thu</TableHead>
+              <TableHead className="min-w-[200px]">
+                Tổng doanh thu (VNĐ)
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
