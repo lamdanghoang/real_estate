@@ -37,30 +37,24 @@ const FormSchema = z.object({
   DiaChi: z.string().min(1, {
     message: "Vui lòng nhập địa chỉ.",
   }),
-  DienTich: z
-    .string()
-    .optional()
-    .refine(
-      (value) => {
-        if (!value) return true;
-        return !isNaN(parseFloat(value));
-      },
-      {
-        message: "Diện tích phải là một số hợp lệ.",
-      }
-    ),
-  GiaThueTheoThang: z
-    .string()
-    .optional()
-    .refine(
-      (value) => {
-        if (!value) return true;
-        return !isNaN(parseFloat(value));
-      },
-      {
-        message: "Giá thuê phải là một số hợp lệ.",
-      }
-    ),
+  DienTich: z.string().refine(
+    (value) => {
+      if (!value) return true;
+      return !isNaN(parseFloat(value));
+    },
+    {
+      message: "Diện tích phải là một số hợp lệ.",
+    }
+  ),
+  GiaThueTheoThang: z.string().refine(
+    (value) => {
+      if (!value) return true;
+      return !isNaN(parseFloat(value));
+    },
+    {
+      message: "Giá thuê phải là một số hợp lệ.",
+    }
+  ),
   TrangThai: z.string().min(2, {
     message: "Vui lòng chọn trạng thái.",
   }),
