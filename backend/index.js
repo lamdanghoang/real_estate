@@ -38,26 +38,30 @@ app.get("/doanhthu", async (req, res) => {
   await handleQuery(
     res,
     `
+    WITH ThongKeBDS AS (
     SELECT 
-    YEAR(hdt.NgayKyHopDong) as Nam,
-    dvhc.TenDVHC,
-    bds.LoaiBDS,
-    COUNT(DISTINCT bds.MaBDS) as 'SoLuongBDS',
-    COUNT(DISTINCT hdt.MaHopDong) as 'SoLuongHopDong',
-    SUM(hdt.GiaThue) as 'TongDoanhThu'
-FROM 
-    BatDongSan bds
-    JOIN DonViHanhChinh dvhc ON bds.MaDVHC = dvhc.MaDVHC COLLATE utf8mb4_unicode_ci
-    LEFT JOIN HopDongThue hdt ON bds.MaBDS = hdt.MaBDS COLLATE utf8mb4_unicode_ci
-GROUP BY 
-    YEAR(hdt.NgayKyHopDong),
-    dvhc.TenDVHC,
-    bds.LoaiBDS
-HAVING 
-    SUM(hdt.GiaThue) > 0
-ORDER BY 
-    Nam DESC,
-    dvhc.TenDVHC ASC;
+        YEAR(hdt.NgayKyHopDong) AS Nam,
+        dvhc.TenDVHC AS TenDVHC,
+        bds.LoaiBDS AS LoaiBDS,
+        bds.MaBDS,
+        hdt.MaHopDong,
+        hdtt.SoTien
+    FROM BatDongSan bds
+        JOIN DonViHanhChinh dvhc ON bds.MaDVHC = dvhc.MaDVHC
+        JOIN HopDongThue hdt ON bds.MaBDS = hdt.MaBDS COLLATE utf8mb4_unicode_ci
+        JOIN HoaDonThanhToan hdtt ON hdt.MaHopDong = hdtt.MaHopDong COLLATE utf8mb4_unicode_ci
+    WHERE hdtt.TrangThaiThanhToan = 'Đã thanh toán' COLLATE utf8mb4_unicode_ci
+)
+SELECT 
+    Nam,
+    TenDVHC,
+    LoaiBDS,
+    COUNT(DISTINCT MaBDS) AS 'SoLuongBDS',
+    COUNT(DISTINCT MaHopDong) AS 'SoLuongHopDong',
+    SUM(SoTien) AS 'TongDoanhThu'
+FROM ThongKeBDS
+GROUP BY Nam, TenDVHC, LoaiBDS
+ORDER BY Nam DESC, TenDVHC;
     `
   );
 });
